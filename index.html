@@ -221,6 +221,17 @@ footer code{font-family:var(--mono);color:var(--brass-dim);font-size:11px}
 a{color:var(--brass)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
+/* ---------- in de kast of niet: dit is het hoofdonderscheid ---------- */
+/* niet in de kast: staal verbleekt, naam gedempt */
+.row[data-owned="0"] .sw{opacity:.4;filter:saturate(.4)}
+.row[data-owned="0"] .nm{color:var(--muted)}
+/* wel in de kast: messing balk aan de linkerkant, volle naam en staal */
+.row[data-owned="1"]{box-shadow:inset 3px 0 0 var(--brass)}
+.row[data-owned="1"] .nm{color:var(--chalk);font-weight:500}
+.owned-tick{width:16px;height:16px;line-height:16px;font-size:10px;box-shadow:0 0 0 2px var(--ink)}
+/* seizoen is bijzaak; drukte voorheen harder door dan het bezit zelf */
+.row[data-dim="1"]{opacity:.55}
+
 /* ---------- toevoegingen: betaalde prijs, per-keer, eigen stuk ---------- */
 .rowline{display:grid;grid-template-columns:1fr 78px;gap:8px;align-items:center}
 .rowline.has-del{grid-template-columns:1fr 78px 22px}

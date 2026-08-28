@@ -9,7 +9,11 @@ Live: https://rubenkraan-droid.github.io/kast/
 ## Wat het doet
 
 - **Stuks** — de hele lijst, per categorie. Klik een regel om aan of uit te vinken.
-  Buiten het seizoen staat een stuk gedimd.
+  Wat in je kast hangt krijgt een messing balk aan de linkerkant, een volle
+  kleurstaal, een vinkje en een heldere naam; wat je niet hebt staat met een
+  verbleekt staal en een gedempte naam. Buiten het seizoen zakt de hele regel
+  terug naar 55% — genoeg om te zien dat het er niet toe doet nu, weinig genoeg
+  om het onderscheid tussen wel en niet in de kast niet te overstemmen.
 - **Beste volgende aankoop** — voor elk stuk dat je niet hebt: hoeveel combinaties
   komen erbij als je het koopt, gedeeld door de prijs. Gesorteerd op rendement.
 - **Wat je hiermee kunt dragen** — de eerste veertien geldige combinaties van
