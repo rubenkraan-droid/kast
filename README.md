@@ -85,7 +85,7 @@ const RULES = {
   shoeColour: {
     zwart: ['grijs','navy'],
     bruin: ['grijs','navy','bruin','beige','groen'],
-    beige: ['bruin','beige','grijs','groen'],
+    beige: ['bruin','beige','grijs','groen','navy'],
   },
   inSeason: (item, season) => season==='alles' || item.s==='j' || item.s===season[0],
 };
@@ -95,7 +95,8 @@ const RULES = {
   liggen. Op `1` combineert een 2 met een 3, maar niet met een 4. Zet je hem op
   `2`, dan wordt de lijst een stuk losser.
 - `shoeColour` — per schoenkleur de toegestane pantalonkleuren. Zwarte schoenen
-  dus niet bij bruin, beige of groen. Een schoenkleur die hier niet in staat,
+  dus niet bij bruin, beige of groen; beige en taupe schoenen mogen sinds de
+  sneakers en de jeans wel bij navy. Een schoenkleur die hier niet in staat,
   combineert met alles. Let op de richting: de sleutel is de **schoen**, de lijst
   bevat **pantalonkleuren**. Voeg je een nieuwe kleurfamilie toe aan `ITEMS`, dan
   moet je hem hier ook in de betreffende lijsten zetten — anders combineert dat

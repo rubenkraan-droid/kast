@@ -156,6 +156,9 @@ h3:first-of-type{margin-top:0}
 .sw[data-tex="leer"]{
   background-image:radial-gradient(circle at 30% 25%,rgba(255,255,255,.22),transparent 58%);
 }
+.sw[data-tex="glans"]{
+  background-image:linear-gradient(115deg,rgba(255,255,255,.28) 0 14%,transparent 34% 66%,rgba(255,255,255,.16) 86% 100%);
+}
 .sw[data-tex="suede"]{
   background-image:radial-gradient(circle at 50% 50%,rgba(255,255,255,.09),transparent 70%);
   filter:saturate(.85);
@@ -320,6 +323,7 @@ a{color:var(--brass)}
     <option value="wit">Wit</option>
     <option value="zwart">Zwart</option>
     <option value="groen">Groen</option>
+    <option value="bordeaux">Bordeaux</option>
   </select></label>
   <label>Formaliteit<select id="fForm">
     <option value="1">1 &mdash; casual</option>
@@ -355,7 +359,7 @@ a{color:var(--brass)}
 </div>
 
 <footer>
-  <p>De regels achter dit ding zijn een inschatting, geen wet. Formaliteit loopt van 1 (jeans, T-shirt, sneaker) tot 4 (zwarte oxford); een combinatie telt mee als de stukken hooguit één stap uit elkaar liggen. Daarbovenop gelden kleurregels: zwarte schoenen niet bij bruin of beige, lichte suède niet bij navy, en flanel alleen in de winter.</p>
+  <p>De regels achter dit ding zijn een inschatting, geen wet. Formaliteit loopt van 1 (jeans, T-shirt, sneaker) tot 4 (zwarte oxford); een combinatie telt mee als de stukken hooguit één stap uit elkaar liggen. Daarbovenop gelden kleurregels: zwarte schoenen alleen bij grijs en navy, bruine en taupe schoenen bij zo goed als alles, en flanel alleen in de winter.</p>
   <p id="persistNote" style="color:var(--brass-dim)"></p>
   <p>Vul je bij een stuk een betaalde prijs in, dan rekent de ranking daarmee door in plaats van met de adviesprijs; laat je het veld leeg, dan blijft de adviesprijs gelden. De prijs per keer gaat uit van <strong>40 draagbeurten per jaar</strong>. Eigen stukken voeg je toe met de knop hierboven; ze staan alleen op dit apparaat.</p>
   <p>Wil je de logica aanpassen, dan zit alles in de arrays <code>ITEMS</code> en <code>RULES</code> onderaan het bestand. Voor GitHub: commit dit als <code>index.html</code> in een repo, zet Pages aan op de hoofdbranch en je hebt een werkende URL. Je kast wordt niet naar een server gestuurd, gebruik daarom de export- en importknop om hem tussen apparaten mee te nemen.</p>
@@ -366,7 +370,7 @@ a{color:var(--brass)}
 /* ============================================================
    ITEMS — pas hier je kast aan
    f = formaliteit 1..4 | s = seizoen: w, z of j (jaarrond)
-   c = kleurfamilie: grijs, navy, bruin, beige, wit, zwart, groen
+   c = kleurfamilie: grijs, navy, bruin, beige, wit, zwart, groen, bordeaux
    ============================================================ */
 const ITEMS = [
  // --- pantalons ---
@@ -379,8 +383,9 @@ const ITEMS = [
  {id:'p7', k:'pantalon', n:'Beige pantalon 4-ply',           m:'Rogna, kreukvrij',tex:'wol',    hex:'#b9a88c', p:179, f:3, s:'z', c:'beige', u:'https://suitsupply.com/nl-nl/men/trousers/beige-wide-leg-tapered-pantalon/B7134.html'},
  {id:'p8', k:'pantalon', n:'Bruine chino',                   m:'puur katoen',     tex:'katoen', hex:'#8a6a4b', p:159, f:2, s:'j', c:'bruin', u:'https://suitsupply.com/nl-nl/men/trousers/bruine-broek-wide-leg-chino/TFT10026LB1.html'},
  {id:'p9', k:'pantalon', n:'Navy chino',                     m:'stretchkatoen',   tex:'katoen', hex:'#2e3748', p:119, f:2, s:'j', c:'navy',  u:'https://suitsupply.com/nl-nl/men/trousers/navy-slim-leg-straight-chino/B17060.html'},
- {id:'p10',k:'pantalon', n:'Grijze pantalon met streep',    m:'dun, prijs invullen',    tex:'wol',    hex:'#7c7f85', p:0,   f:3, s:'z', c:'grijs', u:'https://suitsupply.com/nl-nl/men/trousers/grey'},
+ {id:'p10',k:'pantalon', n:'Grijze pantalon met streep',    m:'dun, prijs invullen',    tex:'wol',    hex:'#7c7f85', p:0,   f:3, s:'j', c:'grijs', u:'https://suitsupply.com/nl-nl/men/trousers/grey'},
  {id:'p11',k:'pantalon', n:'Lichtgroene pantalon',          m:'zomers, prijs invullen', tex:'katoen', hex:'#8d9c72', p:0,   f:2, s:'z', c:'groen', u:'https://suitsupply.com/nl-nl/men/trousers/green'},
+ {id:'p12',k:'pantalon', n:'Denham spijkerbroek, slim fit',m:'nette denim, prijs invullen',tex:'katoen',hex:'#3f5675', p:0,   f:2, s:'j', c:'navy',  u:'https://www.denhamthejeanmaker.com/nl-nl/heren/jeans'},
 
  // --- bovenstukken ---
  {id:'t1', k:'bovenstuk', n:'Wit overhemd, widespread',   m:'Pima katoen, 3 stuks',    tex:'katoen', hex:'#f2f1ed', p:99,  f:3, s:'j', c:'wit',   u:'https://suitsupply.com/nl-nl/men/shirts/wit-overhemd-met-widespread-kraag/H7000.html'},
@@ -396,18 +401,28 @@ const ITEMS = [
  {id:'t11',k:'bovenstuk', n:'Navy merino coltrui',        m:'100% wol',       tex:'brei',   hex:'#2a3242', p:119, f:3, s:'w', c:'navy',  u:'https://suitsupply.com/nl-nl/men/knitwear/navy-merino-coltrui/SW1040.html'},
  {id:'t12',k:'bovenstuk', n:'Camel trui, grover gebreid', m:'prijs invullen', tex:'brei',   hex:'#c0a074', p:0,   f:2, s:'w', c:'beige', u:''},
  {id:'t13',k:'bovenstuk', n:'Gestreept overhemd, contrastkraag', m:'dubbele manchet, prijs invullen', tex:'katoen', hex:'#b9cbe4', p:0, f:4, s:'j', c:'wit', u:'https://suitsupply.com/nl-nl/men/shirts'},
+ {id:'t14',k:'bovenstuk', n:'Zwart glansshirt',        m:'glans, prijs invullen', tex:'glans',  hex:'#25262a', p:0, f:3, s:'j', c:'zwart',    u:'https://suitsupply.com/nl-nl/men/shirts'},
+ {id:'t15',k:'bovenstuk', n:'Navy glansshirt',         m:'glans, prijs invullen', tex:'glans',  hex:'#2a3244', p:0, f:3, s:'j', c:'navy',     u:'https://suitsupply.com/nl-nl/men/shirts'},
+ {id:'t16',k:'bovenstuk', n:'Donkertaupe glansshirt',  m:'glans, prijs invullen', tex:'glans',  hex:'#6b5f52', p:0, f:3, s:'j', c:'beige',    u:'https://suitsupply.com/nl-nl/men/shirts'},
+ {id:'t17',k:'bovenstuk', n:'Zwart overhemd',          m:'prijs invullen',        tex:'katoen', hex:'#1e1f22', p:0, f:3, s:'j', c:'zwart',    u:'https://suitsupply.com/nl-nl/men/shirts'},
+ {id:'t18',k:'bovenstuk', n:'Grijs overhemd',          m:'prijs invullen',        tex:'katoen', hex:'#8a8d92', p:0, f:3, s:'j', c:'grijs',    u:'https://suitsupply.com/nl-nl/men/shirts'},
+ {id:'t19',k:'bovenstuk', n:'Bordeaux overhemd',       m:'prijs invullen',        tex:'katoen', hex:'#6d2f38', p:0, f:3, s:'j', c:'bordeaux', u:'https://suitsupply.com/nl-nl/men/shirts'},
 
  // --- blazers (optionele laag) ---
  {id:'b1', k:'blazer', n:'Navy blazer Havana',        m:'Reda, ongevoerd', tex:'wol', hex:'#263048', p:299, f:3, s:'j', c:'navy',  u:'https://suitsupply.com/nl-nl/men/jackets/navy-blazer-havana-tailored-fit/C25216.html'},
  {id:'b2', k:'blazer', n:'Middenbruin geruite blazer', m:'Rogna, puur wol', tex:'wol', hex:'#7a6a56', p:419, f:3, s:'w', c:'bruin', u:'https://suitsupply.com/nl-nl/men/jackets/middenbruine-geruite-blazer-brera-relaxed-fit/BBL10047CB1.html'},
+ {id:'b3', k:'blazer', n:'Groengrijze blazer',    m:'prijs invullen', tex:'wol', hex:'#6b7263', p:0, f:3, s:'j', c:'groen', u:'https://suitsupply.com/nl-nl/men/jackets'},
+ {id:'b4', k:'blazer', n:'Babyblauwe blazer',     m:'prijs invullen', tex:'wol', hex:'#a8c3dc', p:0, f:3, s:'z', c:'wit',   u:'https://suitsupply.com/nl-nl/men/jackets'},
+ {id:'b5', k:'blazer', n:'Grijze blazer',         m:'prijs invullen', tex:'wol', hex:'#7d8087', p:0, f:3, s:'j', c:'grijs', u:'https://suitsupply.com/nl-nl/men/jackets'},
 
  // --- schoenen ---
- {id:'s1', k:'schoen', n:'Donkerbruine derby, goodyear', m:'extern, verzoolbaar', tex:'leer',  hex:'#4f3524', p:450, f:3, s:'j', c:'bruin', u:''},
+ {id:'s1', k:'schoen', n:'Donkerbruine derby, goodyear', m:'extern, verzoolbaar', tex:'leer',  hex:'#4f3524', p:139.95, f:3, s:'j', c:'bruin', u:''},
  {id:'s2', k:'schoen', n:'Bruine derby',                 m:'Blake, kalfsleer',    tex:'leer',  hex:'#5b3b27', p:229, f:3, s:'j', c:'bruin', u:'https://suitsupply.com/nl-nl/men/shoes/bruine-derby/FW1027.html'},
  {id:'s3', k:'schoen', n:'Bruine loafer',                m:'Italiaans kalfsleer', tex:'leer',  hex:'#6b4630', p:229, f:3, s:'j', c:'bruin', u:'https://suitsupply.com/nl-nl/men/shoes/bruine-loafer/FW1369.html'},
  {id:'s4', k:'schoen', n:'Zwarte oxford',                m:'leer',                tex:'leer',  hex:'#1a1a1c', p:229, f:4, s:'j', c:'zwart', u:'https://suitsupply.com/nl-nl/men/shoes/zwarte-oxford/FLM10009999.html'},
  {id:'s5', k:'schoen', n:'Bruine suède oxford',          m:'kalfssuède',          tex:'suede', hex:'#7a5539', p:229, f:2, s:'z', c:'bruin', u:'https://suitsupply.com/nl-nl/men/shoes/bruine-oxford/FW1028.html'},
  {id:'s6', k:'schoen', n:'Taupe suède instapper',        m:'kalfssuède',          tex:'suede', hex:'#a08a6e', p:229, f:2, s:'z', c:'beige', u:'https://suitsupply.com/nl-nl/men/shoes/taupe-instapper/FW1363.html'},
+ {id:'s7', k:'schoen', n:'Taupe sneakers',                m:'business casual, prijs invullen', tex:'leer', hex:'#a08a6e', p:0, f:2, s:'j', c:'beige', u:'https://suitsupply.com/nl-nl/men/shoes/sneakers'},
 ];
 
 /* ============================================================
@@ -418,7 +433,7 @@ const RULES = {
   shoeColour: {
     zwart: ['grijs','navy'],
     bruin: ['grijs','navy','bruin','beige','groen'],
-    beige: ['bruin','beige','grijs','groen'],
+    beige: ['bruin','beige','grijs','groen','navy'],
   },
   // seizoen: 'w' winter, 'z' zomer, 'j' jaarrond
   inSeason: (item, season) => season==='alles' || item.s==='j' || item.s===season[0],
@@ -440,7 +455,7 @@ const WEARS_PER_YEAR = 40;
 /* kleurfamilie -> zwatchkleur, overgenomen uit de bestaande ITEMS */
 const COLOUR_HEX = {
   grijs:'#6e7074', navy:'#2b3242', bruin:'#5b3b27',
-  beige:'#b9a88c', wit:'#f2f1ed', zwart:'#1a1a1c', groen:'#8d9c72',
+  beige:'#b9a88c', wit:'#f2f1ed', zwart:'#1a1a1c', groen:'#8d9c72', bordeaux:'#6d2f38',
 };
 
 let owned = new Set();
