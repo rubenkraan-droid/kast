@@ -25,6 +25,13 @@ Live: https://rubenkraan-droid.github.io/kast/
 
 Alles blijft in de browser. Er gaat niets naar een server.
 
+## Aantallen
+
+De tool telt soorten, geen exemplaren. Drie identieke witte overhemden zijn één
+regel in `ITEMS`; ze zijn onderling inwisselbaar en leveren samen niet meer
+combinaties op dan één. Het aantal staat waar het relevant is in het `m`-veld
+vermeld.
+
 ## Opslag
 
 Drie sleutels in `localStorage`:
@@ -57,10 +64,10 @@ stuk:
 | `m` | materiaal, de kleine regel eronder |
 | `tex` | weefsel voor het patroontje op het staal: `flanel`, `wol`, `brei`, `katoen`, `leer`, `suede` |
 | `hex` | kleur van het staal |
-| `p` | adviesprijs in euro's; wordt overschreven door een ingevulde betaalde prijs |
+| `p` | adviesprijs in euro's; wordt overschreven door een ingevulde betaalde prijs. `0` betekent *nog niet ingevuld*: zulke stuks blijven uit de ranking, want rendement per euro valt dan niet te berekenen |
 | `f` | formaliteit 1–4 — 1 is jeans en sneakers, 4 is een zwarte oxford |
 | `s` | seizoen: `w` winter, `z` zomer, `j` jaarrond |
-| `c` | kleurfamilie: `grijs`, `navy`, `bruin`, `beige`, `wit`, `zwart` |
+| `c` | kleurfamilie: `grijs`, `navy`, `bruin`, `beige`, `wit`, `zwart`, `groen` |
 | `u` | link naar het product, mag leeg |
 
 Een stuk toevoegen is een regel erbij met een nieuw `id`. Blazers doen niet mee in
@@ -73,8 +80,8 @@ const RULES = {
   maxFormalityGap: 1,
   shoeColour: {
     zwart: ['grijs','navy'],
-    bruin: ['grijs','navy','bruin','beige'],
-    beige: ['bruin','beige','grijs'],
+    bruin: ['grijs','navy','bruin','beige','groen'],
+    beige: ['bruin','beige','grijs','groen'],
   },
   inSeason: (item, season) => season==='alles' || item.s==='j' || item.s===season[0],
 };
@@ -84,8 +91,11 @@ const RULES = {
   liggen. Op `1` combineert een 2 met een 3, maar niet met een 4. Zet je hem op
   `2`, dan wordt de lijst een stuk losser.
 - `shoeColour` — per schoenkleur de toegestane pantalonkleuren. Zwarte schoenen
-  dus niet bij bruin of beige. Een schoenkleur die hier niet in staat, combineert
-  met alles.
+  dus niet bij bruin, beige of groen. Een schoenkleur die hier niet in staat,
+  combineert met alles. Let op de richting: de sleutel is de **schoen**, de lijst
+  bevat **pantalonkleuren**. Voeg je een nieuwe kleurfamilie toe aan `ITEMS`, dan
+  moet je hem hier ook in de betreffende lijsten zetten — anders combineert dat
+  stuk met geen enkele schoen.
 - `inSeason` — `alles` laat alles door; verder telt een stuk mee als het jaarrond
   is (`j`) of als de eerste letter van het seizoen klopt (`winter` → `w`).
 

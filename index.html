@@ -308,6 +308,7 @@ a{color:var(--brass)}
     <option value="beige">Beige</option>
     <option value="wit">Wit</option>
     <option value="zwart">Zwart</option>
+    <option value="groen">Groen</option>
   </select></label>
   <label>Formaliteit<select id="fForm">
     <option value="1">1 &mdash; casual</option>
@@ -354,7 +355,7 @@ a{color:var(--brass)}
 /* ============================================================
    ITEMS — pas hier je kast aan
    f = formaliteit 1..4 | s = seizoen: w, z of j (jaarrond)
-   c = kleurfamilie: grijs, navy, bruin, beige, wit, zwart
+   c = kleurfamilie: grijs, navy, bruin, beige, wit, zwart, groen
    ============================================================ */
 const ITEMS = [
  // --- pantalons ---
@@ -367,18 +368,23 @@ const ITEMS = [
  {id:'p7', k:'pantalon', n:'Beige pantalon 4-ply',           m:'Rogna, kreukvrij',tex:'wol',    hex:'#b9a88c', p:179, f:3, s:'z', c:'beige', u:'https://suitsupply.com/nl-nl/men/trousers/beige-wide-leg-tapered-pantalon/B7134.html'},
  {id:'p8', k:'pantalon', n:'Bruine chino',                   m:'puur katoen',     tex:'katoen', hex:'#8a6a4b', p:159, f:2, s:'j', c:'bruin', u:'https://suitsupply.com/nl-nl/men/trousers/bruine-broek-wide-leg-chino/TFT10026LB1.html'},
  {id:'p9', k:'pantalon', n:'Navy chino',                     m:'stretchkatoen',   tex:'katoen', hex:'#2e3748', p:119, f:2, s:'j', c:'navy',  u:'https://suitsupply.com/nl-nl/men/trousers/navy-slim-leg-straight-chino/B17060.html'},
+ {id:'p10',k:'pantalon', n:'Grijze pantalon met streep',    m:'dun, prijs invullen',    tex:'wol',    hex:'#7c7f85', p:0,   f:3, s:'z', c:'grijs', u:'https://suitsupply.com/nl-nl/men/trousers/grey'},
+ {id:'p11',k:'pantalon', n:'Lichtgroene pantalon',          m:'zomers, prijs invullen', tex:'katoen', hex:'#8d9c72', p:0,   f:2, s:'z', c:'groen', u:'https://suitsupply.com/nl-nl/men/trousers/green'},
 
  // --- bovenstukken ---
- {id:'t1', k:'bovenstuk', n:'Wit overhemd, widespread',   m:'Pima katoen',    tex:'katoen', hex:'#f2f1ed', p:99,  f:3, s:'j', c:'wit',   u:'https://suitsupply.com/nl-nl/men/shirts/wit-overhemd-met-widespread-kraag/H7000.html'},
- {id:'t2', k:'bovenstuk', n:'Lichtblauw overhemd',        m:'Pima katoen',    tex:'katoen', hex:'#c8d6e8', p:99,  f:3, s:'j', c:'wit',   u:'https://suitsupply.com/nl-nl/men/shirts/lichtblauw-overhemd-met-widespread-kraag/H7001.html'},
+ {id:'t1', k:'bovenstuk', n:'Wit overhemd, widespread',   m:'Pima katoen, 3 stuks',    tex:'katoen', hex:'#f2f1ed', p:99,  f:3, s:'j', c:'wit',   u:'https://suitsupply.com/nl-nl/men/shirts/wit-overhemd-met-widespread-kraag/H7000.html'},
+ {id:'t2', k:'bovenstuk', n:'Lichtblauw overhemd',        m:'Pima katoen, 2 stuks',    tex:'katoen', hex:'#c8d6e8', p:99,  f:3, s:'j', c:'wit',   u:'https://suitsupply.com/nl-nl/men/shirts/lichtblauw-overhemd-met-widespread-kraag/H7001.html'},
  {id:'t3', k:'bovenstuk', n:'Navy merino ronde hals',     m:'puur merino',    tex:'brei',   hex:'#2a3242', p:99,  f:3, s:'w', c:'navy',  u:'https://suitsupply.com/nl-nl/men/knitwear/navy-merino-ronde-hals/KCV10002N01.html'},
- {id:'t4', k:'bovenstuk', n:'Grijze merino ronde hals',   m:'puur merino',    tex:'brei',   hex:'#6a6d72', p:99,  f:3, s:'w', c:'grijs', u:'https://suitsupply.com/nl-nl/men/knitwear/navy-merino-ronde-hals/KCV10002N01.html'},
+ {id:'t4', k:'bovenstuk', n:'Grijze merino ronde hals',   m:'puur merino',    tex:'brei',   hex:'#6a6d72', p:99,  f:3, s:'w', c:'grijs', u:'https://suitsupply.com/nl-nl/men/knitwear/crewnecks/grey'},
  {id:'t5', k:'bovenstuk', n:'Navy polo cardigan, lange mouw',m:'puur merino', tex:'brei',   hex:'#2c3446', p:99,  f:2, s:'w', c:'navy',  u:'https://suitsupply.com/nl-nl/men/knitwear/navy-merino-polo-cardigan-met-lange-mouwen/SW1730.html'},
  {id:'t6', k:'bovenstuk', n:'Lichtbruine henley',         m:'puur wol',       tex:'brei',   hex:'#b99a78', p:129, f:2, s:'w', c:'beige', u:'https://suitsupply.com/nl-nl/men/knitwear/lichtbruine-henley-met-ribstructuur/KCV10032LB1.html'},
  {id:'t7', k:'bovenstuk', n:'Navy zip cardigan',          m:'puur merino',    tex:'brei',   hex:'#29313f', p:129, f:2, s:'w', c:'navy',  u:'https://suitsupply.com/nl-nl/men/knitwear/navy-merino-zip-cardigan/SW1041.html'},
  {id:'t8', k:'bovenstuk', n:'Off-white knit polo',        m:'katoen-zijde',   tex:'brei',   hex:'#ede9e0', p:109, f:2, s:'z', c:'wit',   u:'https://suitsupply.com/nl-nl/men/knitwear/off-white-polo-cardigan/SW1682.html'},
  {id:'t9', k:'bovenstuk', n:'Navy knit polo',             m:'katoen-zijde',   tex:'brei',   hex:'#2d3648', p:109, f:2, s:'z', c:'navy',  u:'https://suitsupply.com/nl-nl/men/knitwear/navy-polo-cardigan/SW1867.html'},
  {id:'t10',k:'bovenstuk', n:'Beige crewneck, korte mouw', m:'katoen-zijde',   tex:'brei',   hex:'#cfc7b4', p:99,  f:2, s:'z', c:'beige', u:'https://suitsupply.com/nl-nl/men/knitwear/beige-crewneck-met-korte-mouwen/SW1965.html'},
+ {id:'t11',k:'bovenstuk', n:'Navy merino coltrui',        m:'100% wol',       tex:'brei',   hex:'#2a3242', p:119, f:3, s:'w', c:'navy',  u:'https://suitsupply.com/nl-nl/men/knitwear/navy-merino-coltrui/SW1040.html'},
+ {id:'t12',k:'bovenstuk', n:'Camel trui, grover gebreid', m:'prijs invullen', tex:'brei',   hex:'#c0a074', p:0,   f:2, s:'w', c:'beige', u:''},
+ {id:'t13',k:'bovenstuk', n:'Gestreept overhemd, contrastkraag', m:'dubbele manchet, prijs invullen', tex:'katoen', hex:'#b9cbe4', p:0, f:4, s:'j', c:'wit', u:'https://suitsupply.com/nl-nl/men/shirts'},
 
  // --- blazers (optionele laag) ---
  {id:'b1', k:'blazer', n:'Navy blazer Havana',        m:'Reda, ongevoerd', tex:'wol', hex:'#263048', p:299, f:3, s:'j', c:'navy',  u:'https://suitsupply.com/nl-nl/men/jackets/navy-blazer-havana-tailored-fit/C25216.html'},
@@ -400,8 +406,8 @@ const RULES = {
   maxFormalityGap: 1,
   shoeColour: {
     zwart: ['grijs','navy'],
-    bruin: ['grijs','navy','bruin','beige'],
-    beige: ['bruin','beige','grijs'],
+    bruin: ['grijs','navy','bruin','beige','groen'],
+    beige: ['bruin','beige','grijs','groen'],
   },
   // seizoen: 'w' winter, 'z' zomer, 'j' jaarrond
   inSeason: (item, season) => season==='alles' || item.s==='j' || item.s===season[0],
@@ -423,7 +429,7 @@ const WEARS_PER_YEAR = 40;
 /* kleurfamilie -> zwatchkleur, overgenomen uit de bestaande ITEMS */
 const COLOUR_HEX = {
   grijs:'#6e7074', navy:'#2b3242', bruin:'#5b3b27',
-  beige:'#b9a88c', wit:'#f2f1ed', zwart:'#1a1a1c',
+  beige:'#b9a88c', wit:'#f2f1ed', zwart:'#1a1a1c', groen:'#8d9c72',
 };
 
 let owned = new Set();
@@ -630,7 +636,7 @@ function renderDerived(){
     const gain = countFits(s2, season) - base;
     const pr = priceOf(it);
     return {it, gain, pr, per: pr > 0 ? gain / pr * 100 : gain * 1e4};
-  }).filter(r=>r.gain>0).sort((a,b)=> b.per - a.per || b.gain - a.gain).slice(0,6);
+  }).filter(r=>r.gain>0 && r.pr>0).sort((a,b)=> b.per - a.per || b.gain - a.gain).slice(0,6);
 
   const rk = document.getElementById('ranking');
   rk.innerHTML = '';
