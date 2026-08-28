@@ -298,7 +298,7 @@ a{color:var(--brass)}
 /* ============================================================
    ITEMS — pas hier je kast aan
    f = formaliteit 1..4 | s = seizoen: w, z of j (jaarrond)
-   c = kleurfamilie: grijs, navy, bruin, beige, wit, zwart
+   c = kleurfamilie: grijs, navy, bruin, beige, wit, zwart, groen
    ============================================================ */
 const ITEMS = [
  // --- pantalons ---
@@ -311,6 +311,9 @@ const ITEMS = [
  {id:'p7', k:'pantalon', n:'Beige pantalon 4-ply',           m:'Rogna, kreukvrij',tex:'wol',    hex:'#b9a88c', p:179, f:3, s:'z', c:'beige', u:'https://suitsupply.com/nl-nl/men/trousers/beige-wide-leg-tapered-pantalon/B7134.html'},
  {id:'p8', k:'pantalon', n:'Bruine chino',                   m:'puur katoen',     tex:'katoen', hex:'#8a6a4b', p:159, f:2, s:'j', c:'bruin', u:'https://suitsupply.com/nl-nl/men/trousers/bruine-broek-wide-leg-chino/TFT10026LB1.html'},
  {id:'p9', k:'pantalon', n:'Navy chino',                     m:'stretchkatoen',   tex:'katoen', hex:'#2e3748', p:119, f:2, s:'j', c:'navy',  u:'https://suitsupply.com/nl-nl/men/trousers/navy-slim-leg-straight-chino/B17060.html'},
+ {id:'p10',k:'pantalon', n:'Grijze pantalon met streep',     m:'dun',             tex:'wol',    hex:'#7c7f85', p:50,  f:3, s:'j', c:'grijs', u:'https://suitsupply.com/nl-nl/men/trousers/grey'},
+ {id:'p11',k:'pantalon', n:'Lichtgroene pantalon',           m:'zomers',          tex:'katoen', hex:'#8d9c72', p:50,  f:2, s:'z', c:'groen', u:'https://suitsupply.com/nl-nl/men/trousers/green'},
+ {id:'p12',k:'pantalon', n:'Witte pantalon',                 m:'zomers',          tex:'katoen', hex:'#e9e5da', p:50,  f:3, s:'z', c:'wit',   u:''},
 
  // --- bovenstukken ---
  {id:'t1', k:'bovenstuk', n:'Wit overhemd, widespread',   m:'Pima katoen',    tex:'katoen', hex:'#f2f1ed', p:99,  f:3, s:'j', c:'wit',   u:'https://suitsupply.com/nl-nl/men/shirts/wit-overhemd-met-widespread-kraag/H7000.html'},
@@ -344,8 +347,8 @@ const RULES = {
   maxFormalityGap: 1,
   shoeColour: {
     zwart: ['grijs','navy'],
-    bruin: ['grijs','navy','bruin','beige'],
-    beige: ['bruin','beige','grijs'],
+    bruin: ['grijs','navy','bruin','beige','groen','wit'],
+    beige: ['bruin','beige','grijs','groen','wit'],
   },
   // seizoen: 'w' winter, 'z' zomer, 'j' jaarrond
   inSeason: (item, season) => season==='alles' || item.s==='j' || item.s===season[0],

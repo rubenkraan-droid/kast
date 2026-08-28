@@ -39,7 +39,7 @@ Eén object per kledingstuk:
 | `p`   | prijs in euro's |
 | `f`   | formaliteit 1 (casual) t/m 4 (zwarte oxford) |
 | `s`   | seizoen: `w` winter, `z` zomer, `j` jaarrond |
-| `c`   | kleurfamilie: `grijs`, `navy`, `bruin`, `beige`, `wit` of `zwart` |
+| `c`   | kleurfamilie: `grijs`, `navy`, `bruin`, `beige`, `wit`, `zwart` of `groen` |
 | `u`   | link naar het product (mag leeg) |
 
 Combinaties worden geteld over pantalon + bovenstuk + schoen; blazers staan in de
