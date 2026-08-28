@@ -119,10 +119,11 @@ h3:first-of-type{margin-top:0}
 /* ---------- swatch rows ---------- */
 .row{
   display:grid;
-  grid-template-columns:34px 1fr auto;
+  grid-template-columns:20px 34px 1fr auto;
   gap:12px;align-items:center;
-  padding:8px 10px 8px 8px;
+  padding:9px 10px 9px 8px;
   border:1px solid transparent;
+  border-left:3px solid transparent;
   border-radius:2px;
   cursor:pointer;
   transition:background .13s,border-color .13s,opacity .13s;
@@ -130,9 +131,34 @@ h3:first-of-type{margin-top:0}
 }
 .row:hover{background:var(--panel)}
 .row:focus-visible{outline:2px solid var(--brass);outline-offset:-2px}
-.row[data-owned="1"]{border-color:var(--brass-dim);background:var(--panel)}
-.row[data-dim="1"]{opacity:.26}
-.row[data-sel="1"]{border-color:var(--brass);background:var(--panel-2)}
+
+/* not owned: recedes */
+.row[data-owned="0"]{opacity:.62}
+.row[data-owned="0"] .nm{color:var(--muted)}
+.row[data-owned="0"] .sw{filter:grayscale(.55) brightness(.8)}
+
+/* owned: unmistakable */
+.row[data-owned="1"]{
+  background:var(--panel-2);
+  border-color:var(--line);
+  border-left-color:var(--brass);
+  opacity:1;
+}
+.row[data-owned="1"] .nm{color:var(--chalk);font-weight:500}
+.row[data-dim="1"]{opacity:.3}
+
+/* checkbox */
+.box{
+  width:18px;height:18px;border-radius:2px;
+  border:1.5px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:11px;line-height:1;
+  color:transparent;flex:none;
+}
+.row:hover .box{border-color:var(--brass-dim)}
+.row[data-owned="1"] .box{
+  background:var(--brass);border-color:var(--brass);color:#14161a;
+}
 
 .sw{
   width:34px;height:34px;border-radius:1px;
@@ -156,21 +182,17 @@ h3:first-of-type{margin-top:0}
 .sw[data-tex="leer"]{
   background-image:radial-gradient(circle at 30% 25%,rgba(255,255,255,.22),transparent 58%);
 }
-.sw[data-tex="glans"]{
-  background-image:linear-gradient(115deg,rgba(255,255,255,.28) 0 14%,transparent 34% 66%,rgba(255,255,255,.16) 86% 100%);
-}
 .sw[data-tex="suede"]{
   background-image:radial-gradient(circle at 50% 50%,rgba(255,255,255,.09),transparent 70%);
   filter:saturate(.85);
 }
-.owned-tick{
-  position:absolute;right:-5px;bottom:-5px;
-  width:14px;height:14px;border-radius:50%;
-  background:var(--brass);color:#14161a;
-  font-family:var(--mono);font-size:9px;line-height:14px;text-align:center;
-  display:none;
+.owned-tick{display:none}
+.groupline{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin:14px 0 6px;padding-left:8px;
+  display:flex;align-items:center;gap:9px;
 }
-.row[data-owned="1"] .owned-tick{display:block}
+.groupline::after{content:"";flex:1;height:1px;background:var(--line)}
 
 .nm{font-size:13.5px;line-height:1.3}
 .meta{
@@ -223,62 +245,6 @@ footer{
 footer code{font-family:var(--mono);color:var(--brass-dim);font-size:11px}
 a{color:var(--brass)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
-
-/* ---------- in de kast of niet: dit is het hoofdonderscheid ---------- */
-/* niet in de kast: staal verbleekt, naam gedempt */
-.row[data-owned="0"] .sw{opacity:.4;filter:saturate(.4)}
-.row[data-owned="0"] .nm{color:var(--muted)}
-/* wel in de kast: messing balk aan de linkerkant, volle naam en staal */
-.row[data-owned="1"]{box-shadow:inset 3px 0 0 var(--brass)}
-.row[data-owned="1"] .nm{color:var(--chalk);font-weight:500}
-.owned-tick{width:16px;height:16px;line-height:16px;font-size:10px;box-shadow:0 0 0 2px var(--ink)}
-/* seizoen is bijzaak; drukte voorheen harder door dan het bezit zelf */
-.row[data-dim="1"]{opacity:.55}
-
-/* ---------- toevoegingen: betaalde prijs, per-keer, eigen stuk ---------- */
-.rowline{display:grid;grid-template-columns:1fr 78px;gap:8px;align-items:center}
-.rowline.has-del{grid-template-columns:1fr 78px 22px}
-.price{display:block;text-align:right;line-height:1.25}
-.price .eff{color:var(--brass)}
-.ppw{
-  display:block;font-family:var(--mono);font-size:9.5px;
-  letter-spacing:.05em;color:var(--brass-dim);margin-top:3px;
-}
-.paid input{
-  width:100%;background:transparent;border:1px solid var(--line);border-radius:2px;
-  color:var(--chalk);font-family:var(--mono);font-size:11px;
-  padding:6px 7px;text-align:right;font-variant-numeric:tabular-nums;
-}
-.paid input:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
-.paid input::placeholder{color:var(--muted);opacity:.5}
-.del{
-  background:transparent;border:1px solid var(--line);border-radius:2px;
-  color:var(--muted);font-family:var(--mono);font-size:12px;line-height:1;
-  width:22px;height:22px;cursor:pointer;padding:0;
-}
-.del:hover{color:var(--chalk);border-color:var(--bad)}
-.del:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-
-.addform{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-  gap:12px;align-items:end;
-  border:1px solid var(--line);border-radius:2px;
-  padding:16px;margin-bottom:26px;background:var(--panel);
-}
-.addform label{
-  display:flex;flex-direction:column;gap:5px;
-  font-family:var(--mono);font-size:10px;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--muted);
-}
-.addform input,.addform select{
-  background:var(--ink);border:1px solid var(--line);border-radius:2px;
-  color:var(--chalk);font-family:var(--sans);font-size:13px;padding:7px 8px;
-}
-.addform input:focus-visible,.addform select:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
-.addact{display:flex;gap:8px;align-items:center}
-.ghost.primary{border-color:var(--brass);color:var(--brass)}
-.addform[hidden]{display:none}
 </style>
 
 <div class="wrap">
@@ -304,44 +270,7 @@ a{color:var(--brass)}
   <button class="ghost" id="btnShirts">Alleen overhemden aanvinken</button>
   <button class="ghost" id="btnExport">Kast exporteren</button>
   <button class="ghost" id="btnImport">Kast importeren</button>
-  <button class="ghost" id="btnAdd">Eigen stuk toevoegen</button>
 </div>
-
-<form class="addform" id="addForm" hidden>
-  <label>Naam<input type="text" id="fName" required maxlength="60" placeholder="Groene corduroy pantalon"></label>
-  <label>Categorie<select id="fKind">
-    <option value="pantalon">Pantalon</option>
-    <option value="bovenstuk">Bovenstuk</option>
-    <option value="blazer">Blazer</option>
-    <option value="schoen">Schoen</option>
-  </select></label>
-  <label>Kleur<select id="fColour">
-    <option value="grijs">Grijs</option>
-    <option value="navy">Navy</option>
-    <option value="bruin">Bruin</option>
-    <option value="beige">Beige</option>
-    <option value="wit">Wit</option>
-    <option value="zwart">Zwart</option>
-    <option value="groen">Groen</option>
-    <option value="bordeaux">Bordeaux</option>
-  </select></label>
-  <label>Formaliteit<select id="fForm">
-    <option value="1">1 &mdash; casual</option>
-    <option value="2">2</option>
-    <option value="3" selected>3</option>
-    <option value="4">4 &mdash; formeel</option>
-  </select></label>
-  <label>Seizoen<select id="fSeason">
-    <option value="j">Jaarrond</option>
-    <option value="w">Winter</option>
-    <option value="z">Zomer</option>
-  </select></label>
-  <label>Betaald<input type="number" id="fPrice" min="0" step="1" value="0"></label>
-  <div class="addact">
-    <button type="submit" class="ghost primary">Toevoegen</button>
-    <button type="button" class="ghost" id="btnAddCancel">Annuleren</button>
-  </div>
-</form>
 
 <div class="cols">
   <section>
@@ -359,9 +288,8 @@ a{color:var(--brass)}
 </div>
 
 <footer>
-  <p>De regels achter dit ding zijn een inschatting, geen wet. Formaliteit loopt van 1 (jeans, T-shirt, sneaker) tot 4 (zwarte oxford); een combinatie telt mee als de stukken hooguit één stap uit elkaar liggen. Daarbovenop gelden kleurregels: zwarte schoenen alleen bij grijs en navy, bruine en taupe schoenen bij zo goed als alles, en flanel alleen in de winter.</p>
+  <p>De regels achter dit ding zijn een inschatting, geen wet. Formaliteit loopt van 1 (jeans, T-shirt, sneaker) tot 4 (zwarte oxford); een combinatie telt mee als de stukken hooguit één stap uit elkaar liggen. Daarbovenop gelden kleurregels: zwarte schoenen niet bij bruin of beige, lichte suède niet bij navy, en flanel alleen in de winter.</p>
   <p id="persistNote" style="color:var(--brass-dim)"></p>
-  <p>Vul je bij een stuk een betaalde prijs in, dan rekent de ranking daarmee door in plaats van met de adviesprijs; laat je het veld leeg, dan blijft de adviesprijs gelden. De prijs per keer gaat uit van <strong>40 draagbeurten per jaar</strong>. Eigen stukken voeg je toe met de knop hierboven; ze staan alleen op dit apparaat.</p>
   <p>Wil je de logica aanpassen, dan zit alles in de arrays <code>ITEMS</code> en <code>RULES</code> onderaan het bestand. Voor GitHub: commit dit als <code>index.html</code> in een repo, zet Pages aan op de hoofdbranch en je hebt een werkende URL. Je kast wordt niet naar een server gestuurd, gebruik daarom de export- en importknop om hem tussen apparaten mee te nemen.</p>
 </footer>
 </div>
@@ -370,7 +298,7 @@ a{color:var(--brass)}
 /* ============================================================
    ITEMS — pas hier je kast aan
    f = formaliteit 1..4 | s = seizoen: w, z of j (jaarrond)
-   c = kleurfamilie: grijs, navy, bruin, beige, wit, zwart, groen, bordeaux
+   c = kleurfamilie: grijs, navy, bruin, beige, wit, zwart
    ============================================================ */
 const ITEMS = [
  // --- pantalons ---
@@ -383,46 +311,30 @@ const ITEMS = [
  {id:'p7', k:'pantalon', n:'Beige pantalon 4-ply',           m:'Rogna, kreukvrij',tex:'wol',    hex:'#b9a88c', p:179, f:3, s:'z', c:'beige', u:'https://suitsupply.com/nl-nl/men/trousers/beige-wide-leg-tapered-pantalon/B7134.html'},
  {id:'p8', k:'pantalon', n:'Bruine chino',                   m:'puur katoen',     tex:'katoen', hex:'#8a6a4b', p:159, f:2, s:'j', c:'bruin', u:'https://suitsupply.com/nl-nl/men/trousers/bruine-broek-wide-leg-chino/TFT10026LB1.html'},
  {id:'p9', k:'pantalon', n:'Navy chino',                     m:'stretchkatoen',   tex:'katoen', hex:'#2e3748', p:119, f:2, s:'j', c:'navy',  u:'https://suitsupply.com/nl-nl/men/trousers/navy-slim-leg-straight-chino/B17060.html'},
- {id:'p10',k:'pantalon', n:'Grijze pantalon met streep',    m:'dun, prijs invullen',    tex:'wol',    hex:'#7c7f85', p:0,   f:3, s:'j', c:'grijs', u:'https://suitsupply.com/nl-nl/men/trousers/grey'},
- {id:'p11',k:'pantalon', n:'Lichtgroene pantalon',          m:'zomers, prijs invullen', tex:'katoen', hex:'#8d9c72', p:0,   f:2, s:'z', c:'groen', u:'https://suitsupply.com/nl-nl/men/trousers/green'},
- {id:'p12',k:'pantalon', n:'Denham spijkerbroek, slim fit',m:'nette denim, prijs invullen',tex:'katoen',hex:'#3f5675', p:0,   f:2, s:'j', c:'navy',  u:'https://www.denhamthejeanmaker.com/nl-nl/heren/jeans'},
 
  // --- bovenstukken ---
- {id:'t1', k:'bovenstuk', n:'Wit overhemd, widespread',   m:'Pima katoen, 3 stuks',    tex:'katoen', hex:'#f2f1ed', p:99,  f:3, s:'j', c:'wit',   u:'https://suitsupply.com/nl-nl/men/shirts/wit-overhemd-met-widespread-kraag/H7000.html'},
- {id:'t2', k:'bovenstuk', n:'Lichtblauw overhemd',        m:'Pima katoen, 2 stuks',    tex:'katoen', hex:'#c8d6e8', p:99,  f:3, s:'j', c:'wit',   u:'https://suitsupply.com/nl-nl/men/shirts/lichtblauw-overhemd-met-widespread-kraag/H7001.html'},
+ {id:'t1', k:'bovenstuk', n:'Wit overhemd, widespread',   m:'Pima katoen',    tex:'katoen', hex:'#f2f1ed', p:99,  f:3, s:'j', c:'wit',   u:'https://suitsupply.com/nl-nl/men/shirts/wit-overhemd-met-widespread-kraag/H7000.html'},
+ {id:'t2', k:'bovenstuk', n:'Lichtblauw overhemd',        m:'Pima katoen',    tex:'katoen', hex:'#c8d6e8', p:99,  f:3, s:'j', c:'wit',   u:'https://suitsupply.com/nl-nl/men/shirts/lichtblauw-overhemd-met-widespread-kraag/H7001.html'},
  {id:'t3', k:'bovenstuk', n:'Navy merino ronde hals',     m:'puur merino',    tex:'brei',   hex:'#2a3242', p:99,  f:3, s:'w', c:'navy',  u:'https://suitsupply.com/nl-nl/men/knitwear/navy-merino-ronde-hals/KCV10002N01.html'},
- {id:'t4', k:'bovenstuk', n:'Grijze merino ronde hals',   m:'puur merino',    tex:'brei',   hex:'#6a6d72', p:99,  f:3, s:'w', c:'grijs', u:'https://suitsupply.com/nl-nl/men/knitwear/crewnecks/grey'},
+ {id:'t4', k:'bovenstuk', n:'Grijze merino ronde hals',   m:'puur merino',    tex:'brei',   hex:'#6a6d72', p:99,  f:3, s:'w', c:'grijs', u:'https://suitsupply.com/nl-nl/men/knitwear/navy-merino-ronde-hals/KCV10002N01.html'},
  {id:'t5', k:'bovenstuk', n:'Navy polo cardigan, lange mouw',m:'puur merino', tex:'brei',   hex:'#2c3446', p:99,  f:2, s:'w', c:'navy',  u:'https://suitsupply.com/nl-nl/men/knitwear/navy-merino-polo-cardigan-met-lange-mouwen/SW1730.html'},
  {id:'t6', k:'bovenstuk', n:'Lichtbruine henley',         m:'puur wol',       tex:'brei',   hex:'#b99a78', p:129, f:2, s:'w', c:'beige', u:'https://suitsupply.com/nl-nl/men/knitwear/lichtbruine-henley-met-ribstructuur/KCV10032LB1.html'},
  {id:'t7', k:'bovenstuk', n:'Navy zip cardigan',          m:'puur merino',    tex:'brei',   hex:'#29313f', p:129, f:2, s:'w', c:'navy',  u:'https://suitsupply.com/nl-nl/men/knitwear/navy-merino-zip-cardigan/SW1041.html'},
  {id:'t8', k:'bovenstuk', n:'Off-white knit polo',        m:'katoen-zijde',   tex:'brei',   hex:'#ede9e0', p:109, f:2, s:'z', c:'wit',   u:'https://suitsupply.com/nl-nl/men/knitwear/off-white-polo-cardigan/SW1682.html'},
  {id:'t9', k:'bovenstuk', n:'Navy knit polo',             m:'katoen-zijde',   tex:'brei',   hex:'#2d3648', p:109, f:2, s:'z', c:'navy',  u:'https://suitsupply.com/nl-nl/men/knitwear/navy-polo-cardigan/SW1867.html'},
  {id:'t10',k:'bovenstuk', n:'Beige crewneck, korte mouw', m:'katoen-zijde',   tex:'brei',   hex:'#cfc7b4', p:99,  f:2, s:'z', c:'beige', u:'https://suitsupply.com/nl-nl/men/knitwear/beige-crewneck-met-korte-mouwen/SW1965.html'},
- {id:'t11',k:'bovenstuk', n:'Navy merino coltrui',        m:'100% wol',       tex:'brei',   hex:'#2a3242', p:119, f:3, s:'w', c:'navy',  u:'https://suitsupply.com/nl-nl/men/knitwear/navy-merino-coltrui/SW1040.html'},
- {id:'t12',k:'bovenstuk', n:'Camel trui, grover gebreid', m:'prijs invullen', tex:'brei',   hex:'#c0a074', p:0,   f:2, s:'w', c:'beige', u:''},
- {id:'t13',k:'bovenstuk', n:'Gestreept overhemd, contrastkraag', m:'dubbele manchet, prijs invullen', tex:'katoen', hex:'#b9cbe4', p:0, f:4, s:'j', c:'wit', u:'https://suitsupply.com/nl-nl/men/shirts'},
- {id:'t14',k:'bovenstuk', n:'Zwart glansshirt',        m:'glans, prijs invullen', tex:'glans',  hex:'#25262a', p:0, f:3, s:'j', c:'zwart',    u:'https://suitsupply.com/nl-nl/men/shirts'},
- {id:'t15',k:'bovenstuk', n:'Navy glansshirt',         m:'glans, prijs invullen', tex:'glans',  hex:'#2a3244', p:0, f:3, s:'j', c:'navy',     u:'https://suitsupply.com/nl-nl/men/shirts'},
- {id:'t16',k:'bovenstuk', n:'Donkertaupe glansshirt',  m:'glans, prijs invullen', tex:'glans',  hex:'#6b5f52', p:0, f:3, s:'j', c:'beige',    u:'https://suitsupply.com/nl-nl/men/shirts'},
- {id:'t17',k:'bovenstuk', n:'Zwart overhemd',          m:'prijs invullen',        tex:'katoen', hex:'#1e1f22', p:0, f:3, s:'j', c:'zwart',    u:'https://suitsupply.com/nl-nl/men/shirts'},
- {id:'t18',k:'bovenstuk', n:'Grijs overhemd',          m:'prijs invullen',        tex:'katoen', hex:'#8a8d92', p:0, f:3, s:'j', c:'grijs',    u:'https://suitsupply.com/nl-nl/men/shirts'},
- {id:'t19',k:'bovenstuk', n:'Bordeaux overhemd',       m:'prijs invullen',        tex:'katoen', hex:'#6d2f38', p:0, f:3, s:'j', c:'bordeaux', u:'https://suitsupply.com/nl-nl/men/shirts'},
 
  // --- blazers (optionele laag) ---
  {id:'b1', k:'blazer', n:'Navy blazer Havana',        m:'Reda, ongevoerd', tex:'wol', hex:'#263048', p:299, f:3, s:'j', c:'navy',  u:'https://suitsupply.com/nl-nl/men/jackets/navy-blazer-havana-tailored-fit/C25216.html'},
  {id:'b2', k:'blazer', n:'Middenbruin geruite blazer', m:'Rogna, puur wol', tex:'wol', hex:'#7a6a56', p:419, f:3, s:'w', c:'bruin', u:'https://suitsupply.com/nl-nl/men/jackets/middenbruine-geruite-blazer-brera-relaxed-fit/BBL10047CB1.html'},
- {id:'b3', k:'blazer', n:'Groengrijze blazer',    m:'prijs invullen', tex:'wol', hex:'#6b7263', p:0, f:3, s:'j', c:'groen', u:'https://suitsupply.com/nl-nl/men/jackets'},
- {id:'b4', k:'blazer', n:'Babyblauwe blazer',     m:'prijs invullen', tex:'wol', hex:'#a8c3dc', p:0, f:3, s:'z', c:'wit',   u:'https://suitsupply.com/nl-nl/men/jackets'},
- {id:'b5', k:'blazer', n:'Grijze blazer',         m:'prijs invullen', tex:'wol', hex:'#7d8087', p:0, f:3, s:'j', c:'grijs', u:'https://suitsupply.com/nl-nl/men/jackets'},
 
  // --- schoenen ---
- {id:'s1', k:'schoen', n:'Donkerbruine derby, goodyear', m:'extern, verzoolbaar', tex:'leer',  hex:'#4f3524', p:139.95, f:3, s:'j', c:'bruin', u:''},
+ {id:'s1', k:'schoen', n:'Donkerbruine derby, goodyear', m:'extern, verzoolbaar', tex:'leer',  hex:'#4f3524', p:450, f:3, s:'j', c:'bruin', u:''},
  {id:'s2', k:'schoen', n:'Bruine derby',                 m:'Blake, kalfsleer',    tex:'leer',  hex:'#5b3b27', p:229, f:3, s:'j', c:'bruin', u:'https://suitsupply.com/nl-nl/men/shoes/bruine-derby/FW1027.html'},
  {id:'s3', k:'schoen', n:'Bruine loafer',                m:'Italiaans kalfsleer', tex:'leer',  hex:'#6b4630', p:229, f:3, s:'j', c:'bruin', u:'https://suitsupply.com/nl-nl/men/shoes/bruine-loafer/FW1369.html'},
  {id:'s4', k:'schoen', n:'Zwarte oxford',                m:'leer',                tex:'leer',  hex:'#1a1a1c', p:229, f:4, s:'j', c:'zwart', u:'https://suitsupply.com/nl-nl/men/shoes/zwarte-oxford/FLM10009999.html'},
  {id:'s5', k:'schoen', n:'Bruine suède oxford',          m:'kalfssuède',          tex:'suede', hex:'#7a5539', p:229, f:2, s:'z', c:'bruin', u:'https://suitsupply.com/nl-nl/men/shoes/bruine-oxford/FW1028.html'},
  {id:'s6', k:'schoen', n:'Taupe suède instapper',        m:'kalfssuède',          tex:'suede', hex:'#a08a6e', p:229, f:2, s:'z', c:'beige', u:'https://suitsupply.com/nl-nl/men/shoes/taupe-instapper/FW1363.html'},
- {id:'s7', k:'schoen', n:'Taupe sneakers',                m:'business casual, prijs invullen', tex:'leer', hex:'#a08a6e', p:0, f:2, s:'j', c:'beige', u:'https://suitsupply.com/nl-nl/men/shoes/sneakers'},
 ];
 
 /* ============================================================
@@ -432,8 +344,8 @@ const RULES = {
   maxFormalityGap: 1,
   shoeColour: {
     zwart: ['grijs','navy'],
-    bruin: ['grijs','navy','bruin','beige','groen'],
-    beige: ['bruin','beige','grijs','groen','navy'],
+    bruin: ['grijs','navy','bruin','beige'],
+    beige: ['bruin','beige','grijs'],
   },
   // seizoen: 'w' winter, 'z' zomer, 'j' jaarrond
   inSeason: (item, season) => season==='alles' || item.s==='j' || item.s===season[0],
@@ -447,34 +359,10 @@ const KINDS = [
 ];
 
 /* ---------- state ---------- */
-const STORE_KEY  = 'kast.owned.v1';
-const PRICE_KEY  = 'kast.prices.v1';   /* {id: bedrag} - wat je werkelijk betaalde */
-const CUSTOM_KEY = 'kast.custom.v1';   /* eigen stukken, zelfde vorm als ITEMS */
-const WEARS_PER_YEAR = 40;
-
-/* kleurfamilie -> zwatchkleur, overgenomen uit de bestaande ITEMS */
-const COLOUR_HEX = {
-  grijs:'#6e7074', navy:'#2b3242', bruin:'#5b3b27',
-  beige:'#b9a88c', wit:'#f2f1ed', zwart:'#1a1a1c', groen:'#8d9c72', bordeaux:'#6d2f38',
-};
-
+const STORE_KEY = 'kast.owned.v1';
 let owned = new Set();
-let paid = {};      /* id -> betaalde prijs */
-let custom = [];    /* eigen stukken */
 let season = 'winter';
 let canPersist = true;
-
-const esc = s => String(s).replace(/[&<>"']/g, c =>
-  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const fmtEur  = n => '\u20ac' + Math.round(n).toLocaleString('nl-NL');
-const fmtEur2 = n => '\u20ac' + n.toLocaleString('nl-NL',{minimumFractionDigits:2,maximumFractionDigits:2});
-
-/* prijs waarmee gerekend wordt: betaald bedrag als je het invulde, anders de adviesprijs */
-function priceOf(it){
-  const v = paid[it.id];
-  return (typeof v === 'number' && isFinite(v) && v >= 0) ? v : it.p;
-}
-function perWear(it){ return priceOf(it) / WEARS_PER_YEAR; }
 
 function loadOwned(){
   try {
@@ -488,34 +376,16 @@ function saveOwned(){
   try { window.localStorage.setItem(STORE_KEY, JSON.stringify([...owned])); }
   catch(e){ canPersist = false; updatePersistNote(); }
 }
-function loadJSON(key){
-  try {
-    const raw = window.localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : null;
-  } catch(e){ canPersist = false; return null; }
-}
-function savePaid(){
-  if(!canPersist) return;
-  try { window.localStorage.setItem(PRICE_KEY, JSON.stringify(paid)); }
-  catch(e){ canPersist = false; updatePersistNote(); }
-}
-function saveCustom(){
-  if(!canPersist) return;
-  try { window.localStorage.setItem(CUSTOM_KEY, JSON.stringify(custom)); }
-  catch(e){ canPersist = false; updatePersistNote(); }
-}
 function updatePersistNote(){
   const el = document.getElementById('persistNote');
   if(!el) return;
   el.textContent = canPersist
-    ? 'Je vinkjes, betaalde prijzen en eigen stukken worden op dit apparaat bewaard.'
+    ? 'Je vinkjes worden op dit apparaat bewaard.'
     : 'Deze weergave bewaart niets. Zodra je het bestand zelf host, blijven je vinkjes staan.';
 }
 
-/* ITEMS blijft de vaste lijst; eigen stukken komen er los bij */
-const allItems = () => ITEMS.concat(custom);
-const byId = id => allItems().find(i=>i.id===id);
-const of = k => allItems().filter(i=>i.k===k);
+const byId = id => ITEMS.find(i=>i.id===id);
+const of = k => ITEMS.filter(i=>i.k===k);
 
 function shoeOk(shoe, trouser){
   const allowed = RULES.shoeColour[shoe.c] || null;
@@ -563,106 +433,60 @@ function listFits(seas, cap){
 /* ---------- render ---------- */
 function render(){
   saveOwned();
-  renderLibrary();
-  renderDerived();
-}
+  const base = countFits(owned, season);
 
-/* de lijst zelf; apart gehouden zodat typen in een prijsveld de focus niet wegneemt */
-function renderLibrary(){
+  // library
   const lib = document.getElementById('library');
   lib.innerHTML = '';
   for(const {k,label} of KINDS){
-    const h = document.createElement('h3');
-    h.textContent = label;
-    lib.appendChild(h);
-    for(const it of of(k)){
-      const line = document.createElement('div');
-      line.className = 'rowline' + (it.own ? ' has-del' : '');
+    const all = of(k);
+    const have = all.filter(i=>owned.has(i.id));
+    const want = all.filter(i=>!owned.has(i.id));
 
+    const h = document.createElement('h3');
+    h.textContent = label + '  ' + have.length + '/' + all.length;
+    lib.appendChild(h);
+
+    const addRow = it => {
       const b = document.createElement('button');
       b.className = 'row';
       b.type = 'button';
-      b.dataset.owned = owned.has(it.id) ? '1' : '0';
+      const isOwned = owned.has(it.id);
+      b.dataset.owned = isOwned ? '1' : '0';
       b.dataset.dim = RULES.inSeason(it,season) ? '0' : '1';
-      b.setAttribute('aria-pressed', owned.has(it.id));
-      const over = paid[it.id] != null;
+      b.setAttribute('aria-pressed', isOwned);
       b.innerHTML =
-        '<span class="sw" data-tex="'+it.tex+'" style="background-color:'+it.hex+'">'+
-          '<span class="owned-tick">&#10003;</span></span>'+
-        '<span><span class="nm">'+esc(it.n)+'</span>'+
-          '<span class="meta">'+esc(it.m)+' &middot; '+seasonLabel(it.s)+'</span></span>'+
-        '<span class="price">'+
-          '<span class="amt'+(over ? ' eff' : '')+'">'+fmtEur(priceOf(it))+'</span>'+
-          '<span class="ppw">'+fmtEur2(perWear(it))+' p/keer</span></span>';
+        '<span class="box">&#10003;</span>'+
+        '<span class="sw" data-tex="'+it.tex+'" style="background-color:'+it.hex+'"></span>'+
+        '<span><span class="nm">'+it.n+'</span>'+
+          '<span class="meta">'+it.m+' &middot; '+seasonLabel(it.s)+'</span></span>'+
+        '<span class="price">&euro;'+it.p+'</span>';
       b.onclick = () => { owned.has(it.id) ? owned.delete(it.id) : owned.add(it.id); render(); };
-      line.appendChild(b);
+      lib.appendChild(b);
+    };
 
-      /* betaalde prijs: leeg = reken met de adviesprijs */
-      const lab = document.createElement('label');
-      lab.className = 'paid';
-      const sr = document.createElement('span');
-      sr.className = 'sr';
-      sr.textContent = 'Betaalde prijs voor ' + it.n;
-      const inp = document.createElement('input');
-      inp.type = 'number';
-      inp.min = '0';
-      inp.step = '1';
-      inp.placeholder = String(it.p);
-      inp.value = over ? paid[it.id] : '';
-      inp.oninput = () => {
-        const raw = inp.value.trim();
-        if(raw === ''){
-          delete paid[it.id];
-        } else {
-          const n = Number(raw.replace(',', '.'));
-          if(!isFinite(n) || n < 0) return;
-          paid[it.id] = n;
-        }
-        savePaid();
-        const now = paid[it.id] != null;
-        b.querySelector('.amt').textContent = fmtEur(priceOf(it));
-        b.querySelector('.amt').className = 'amt' + (now ? ' eff' : '');
-        b.querySelector('.ppw').textContent = fmtEur2(perWear(it)) + ' p/keer';
-        renderDerived();
-      };
-      lab.appendChild(sr);
-      lab.appendChild(inp);
-      line.appendChild(lab);
-
-      if(it.own){
-        const del = document.createElement('button');
-        del.className = 'del';
-        del.type = 'button';
-        del.title = 'Eigen stuk verwijderen';
-        del.setAttribute('aria-label', 'Verwijder ' + it.n);
-        del.textContent = '\u00d7';
-        del.onclick = () => {
-          custom = custom.filter(c => c.id !== it.id);
-          owned.delete(it.id);
-          delete paid[it.id];
-          saveCustom();
-          savePaid();
-          render();
-        };
-        line.appendChild(del);
-      }
-
-      lib.appendChild(line);
+    if(have.length){
+      const g = document.createElement('div');
+      g.className = 'groupline';
+      g.textContent = 'In mijn kast';
+      lib.appendChild(g);
+      have.forEach(addRow);
+    }
+    if(want.length){
+      const g = document.createElement('div');
+      g.className = 'groupline';
+      g.textContent = have.length ? 'Nog te kopen' : 'Nog niets aangevinkt';
+      lib.appendChild(g);
+      want.forEach(addRow);
     }
   }
-}
-
-/* alles wat uit de kast volgt: ranking, outfits, tellers */
-function renderDerived(){
-  const base = countFits(owned, season);
 
   // ranking
-  const rank = allItems().filter(i=>!owned.has(i.id)).map(it=>{
+  const rank = ITEMS.filter(i=>!owned.has(i.id)).map(it=>{
     const s2 = new Set(owned); s2.add(it.id);
     const gain = countFits(s2, season) - base;
-    const pr = priceOf(it);
-    return {it, gain, pr, per: pr > 0 ? gain / pr * 100 : gain * 1e4};
-  }).filter(r=>r.gain>0 && r.pr>0).sort((a,b)=> b.per - a.per || b.gain - a.gain).slice(0,6);
+    return {it, gain, per: gain / it.p * 100};
+  }).filter(r=>r.gain>0).sort((a,b)=> b.per - a.per || b.gain - a.gain).slice(0,6);
 
   const rk = document.getElementById('ranking');
   rk.innerHTML = '';
@@ -674,9 +498,8 @@ function renderDerived(){
       const d = document.createElement('div');
       d.className = 'buy';
       d.innerHTML =
-        '<div><div class="bn">'+esc(r.it.n)+'</div>'+
-        '<div class="bm">'+fmtEur(r.pr)+' &middot; '+fmtEur(r.pr/r.gain)+' per combinatie &middot; '+
-          fmtEur2(perWear(r.it))+' per keer</div></div>'+
+        '<div><div class="bn">'+r.it.n+'</div>'+
+        '<div class="bm">&euro;'+r.it.p+' &middot; '+Math.round(r.it.p/r.gain)+' euro per combinatie</div></div>'+
         '<div class="bv">+'+r.gain+'<small>combinaties</small></div>'+
         '<div class="bar"><i style="width:'+(r.per/max*100).toFixed(1)+'%"></i></div>';
       rk.appendChild(d);
@@ -700,7 +523,7 @@ function renderDerived(){
           '<span class="chip" style="background:'+f.p.hex+'"></span>'+
           '<span class="chip" style="background:'+f.s.hex+'"></span>'+
         '</span>'+
-        '<span class="txt">'+esc(f.t.n)+' &middot; '+esc(f.p.n.toLowerCase())+' &middot; '+esc(f.s.n.toLowerCase())+'</span>'+
+        '<span class="txt">'+f.t.n+' &middot; '+f.p.n.toLowerCase()+' &middot; '+f.s.n.toLowerCase()+'</span>'+
         (f.note ? '<span class="note">'+f.note+'</span>' : '');
       ob.appendChild(d);
     }
@@ -711,7 +534,7 @@ function renderDerived(){
   // counters
   document.getElementById('cOwned').textContent = owned.size;
   document.getElementById('cFits').textContent = base;
-  const spend = allItems().filter(i=>!owned.has(i.id) && RULES.inSeason(i,season)).reduce((a,b)=>a+priceOf(b),0);
+  const spend = ITEMS.filter(i=>!owned.has(i.id) && RULES.inSeason(i,season)).reduce((a,b)=>a+b.p,0);
   document.getElementById('cSpend').textContent = '\u20ac'+spend.toLocaleString('nl-NL');
 }
 
@@ -727,55 +550,9 @@ document.querySelectorAll('.seg button').forEach(b=>{
   };
 });
 document.getElementById('btnReset').onclick = () => { owned.clear(); render(); };
-
-/* ---------- eigen stuk toevoegen ---------- */
-const addForm = document.getElementById('addForm');
-function nextCustomId(){
-  let n = 0;
-  for(const c of custom){
-    const m = /^x(\d+)$/.exec(c.id);
-    if(m) n = Math.max(n, Number(m[1]));
-  }
-  return 'x' + (n + 1);
-}
-document.getElementById('btnAdd').onclick = () => {
-  addForm.hidden = !addForm.hidden;
-  if(!addForm.hidden) document.getElementById('fName').focus();
-};
-document.getElementById('btnAddCancel').onclick = () => { addForm.hidden = true; };
-addForm.onsubmit = e => {
-  e.preventDefault();
-  const name = document.getElementById('fName').value.trim();
-  if(!name) return;
-  const colour = document.getElementById('fColour').value;
-  const price = Math.max(0, Number(document.getElementById('fPrice').value) || 0);
-  const it = {
-    id:  nextCustomId(),
-    k:   document.getElementById('fKind').value,
-    n:   name,
-    m:   'eigen stuk',
-    tex: '',
-    hex: COLOUR_HEX[colour],
-    p:   price,
-    f:   Number(document.getElementById('fForm').value),
-    s:   document.getElementById('fSeason').value,
-    c:   colour,
-    u:   '',
-    own: true,
-  };
-  custom.push(it);
-  owned.add(it.id);          /* je hebt het al, anders voeg je het niet toe */
-  paid[it.id] = price;
-  saveCustom();
-  savePaid();
-  addForm.reset();
-  addForm.hidden = true;
-  render();
-};
 document.getElementById('btnShirts').onclick = () => { owned.add('t1'); owned.add('t2'); render(); };
 document.getElementById('btnExport').onclick = () => {
-  const payload = {v:2, owned:[...owned], paid, custom};
-  const blob = new Blob([JSON.stringify(payload)], {type:'application/json'});
+  const blob = new Blob([JSON.stringify([...owned])], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'kast.json';
@@ -788,18 +565,7 @@ document.getElementById('btnImport').onclick = () => {
     const f = e.target.files[0]; if(!f) return;
     const r = new FileReader();
     r.onload = () => {
-      try {
-        const d = JSON.parse(r.result);
-        if(Array.isArray(d)){            /* kast.json van vóór deze versie */
-          owned = new Set(d);
-        } else {
-          owned  = new Set(d.owned  || []);
-          paid   = d.paid   || {};
-          custom = (d.custom || []).map(c => Object.assign({}, c, {own:true}));
-        }
-        saveOwned(); savePaid(); saveCustom();
-        render();
-      }
+      try { owned = new Set(JSON.parse(r.result)); render(); }
       catch { alert('Dat bestand kon ik niet lezen. Gebruik een kast.json uit de exportknop.'); }
     };
     r.readAsText(f);
@@ -813,8 +579,6 @@ if(restored){
 } else {
   owned.add('t1'); owned.add('t2');
 }
-paid = loadJSON(PRICE_KEY) || {};
-custom = (loadJSON(CUSTOM_KEY) || []).map(c => Object.assign({}, c, {own:true}));
 updatePersistNote();
 render();
 </script>
