@@ -314,6 +314,7 @@ const ITEMS = [
  {id:'p10',k:'pantalon', n:'Grijze pantalon met streep',     m:'dun',             tex:'wol',    hex:'#7c7f85', p:50,  f:3, s:'j', c:'grijs', u:'https://suitsupply.com/nl-nl/men/trousers/grey'},
  {id:'p11',k:'pantalon', n:'Lichtgroene pantalon',           m:'zomers',          tex:'katoen', hex:'#8d9c72', p:50,  f:2, s:'z', c:'groen', u:'https://suitsupply.com/nl-nl/men/trousers/green'},
  {id:'p12',k:'pantalon', n:'Witte pantalon',                 m:'zomers',          tex:'katoen', hex:'#e9e5da', p:50,  f:3, s:'z', c:'wit',   u:''},
+ {id:'p13',k:'pantalon', n:'Denham spijkerbroek, slim fit',  m:'nette denim',     tex:'katoen', hex:'#3f5675', p:50,  f:2, s:'j', c:'navy',  u:'https://www.denhamthejeanmaker.com/nl-nl/heren/jeans'},
 
  // --- bovenstukken ---
  {id:'t1', k:'bovenstuk', n:'Wit overhemd, widespread',   m:'Pima katoen',    tex:'katoen', hex:'#f2f1ed', p:99,  f:3, s:'j', c:'wit',   u:'https://suitsupply.com/nl-nl/men/shirts/wit-overhemd-met-widespread-kraag/H7000.html'},
@@ -338,6 +339,7 @@ const ITEMS = [
  {id:'s4', k:'schoen', n:'Zwarte oxford',                m:'leer',                tex:'leer',  hex:'#1a1a1c', p:229, f:4, s:'j', c:'zwart', u:'https://suitsupply.com/nl-nl/men/shoes/zwarte-oxford/FLM10009999.html'},
  {id:'s5', k:'schoen', n:'Bruine suède oxford',          m:'kalfssuède',          tex:'suede', hex:'#7a5539', p:229, f:2, s:'z', c:'bruin', u:'https://suitsupply.com/nl-nl/men/shoes/bruine-oxford/FW1028.html'},
  {id:'s6', k:'schoen', n:'Taupe suède instapper',        m:'kalfssuède',          tex:'suede', hex:'#a08a6e', p:229, f:2, s:'z', c:'beige', u:'https://suitsupply.com/nl-nl/men/shoes/taupe-instapper/FW1363.html'},
+ {id:'s7', k:'schoen', n:'Taupe sneakers',               m:'business casual',     tex:'leer',  hex:'#a08a6e', p:50,  f:2, s:'j', c:'beige', u:'https://suitsupply.com/nl-nl/men/shoes/sneakers'},
 ];
 
 /* ============================================================
@@ -348,7 +350,7 @@ const RULES = {
   shoeColour: {
     zwart: ['grijs','navy'],
     bruin: ['grijs','navy','bruin','beige','groen','wit'],
-    beige: ['bruin','beige','grijs','groen','wit'],
+    beige: ['bruin','beige','grijs','groen','wit','navy'],
   },
   // seizoen: 'w' winter, 'z' zomer, 'j' jaarrond
   inSeason: (item, season) => season==='alles' || item.s==='j' || item.s===season[0],
