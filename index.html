@@ -133,6 +133,13 @@ h3:first-of-type{margin-top:0}
 .row[data-owned="1"]{border-color:var(--brass-dim);background:var(--panel)}
 .row[data-dim="1"]{opacity:.26}
 .row[data-sel="1"]{border-color:var(--brass);background:var(--panel-2)}
+.sw{cursor:pointer}
+.clearfocus{
+  background:transparent;border:1px solid var(--brass-dim);border-radius:2px;
+  color:var(--brass);font-family:var(--mono);font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;padding:1px 5px;margin-left:6px;cursor:pointer;
+}
+.clearfocus:hover{color:var(--chalk);border-color:var(--brass)}
 
 .sw{
   width:34px;height:34px;border-radius:1px;
@@ -343,7 +350,7 @@ a{color:var(--brass)}
 
 <div class="cols">
   <section>
-    <h2>Stuks <span id="hintOwned">klik om aan of uit te vinken</span></h2>
+    <h2>Stuks <span id="hintOwned">klik de regel om aan te vinken, de kleurstaal voor combinaties</span></h2>
     <div id="library"></div>
   </section>
 
@@ -408,6 +415,9 @@ const ITEMS = [
  {id:'t17',k:'bovenstuk', n:'Zwart overhemd',          m:'',        tex:'katoen', hex:'#1e1f22', p:0, f:3, s:'j', c:'zwart',    u:'https://suitsupply.com/nl-nl/men/shirts'},
  {id:'t18',k:'bovenstuk', n:'Grijs overhemd',          m:'',        tex:'katoen', hex:'#8a8d92', p:0, f:3, s:'j', c:'grijs',    u:'https://suitsupply.com/nl-nl/men/shirts'},
  {id:'t19',k:'bovenstuk', n:'Bordeaux overhemd',       m:'',        tex:'katoen', hex:'#6d2f38', p:0, f:3, s:'j', c:'bordeaux', u:'https://suitsupply.com/nl-nl/men/shirts'},
+ {id:'t20',k:'bovenstuk', n:'Donkerbruine halfzip',     m:'puur merino',           tex:'brei', hex:'#4a3a2e', p:0, f:3, s:'w', c:'bruin', u:''},
+ {id:'t21',k:'bovenstuk', n:'Donkerbruine polo, lange mouw', m:'zonder knopen',    tex:'brei', hex:'#54412f', p:0, f:3, s:'j', c:'bruin', u:''},
+ {id:'t22',k:'bovenstuk', n:'Navy polo, lange mouw',    m:'zonder knopen',         tex:'brei', hex:'#2a3242', p:0, f:3, s:'j', c:'navy',  u:''},
 
  // --- blazers (optionele laag) ---
  {id:'b1', k:'blazer', n:'Navy blazer Havana',        m:'Reda, ongevoerd', tex:'wol', hex:'#263048', p:299, f:3, s:'j', c:'navy',  u:'https://suitsupply.com/nl-nl/men/jackets/navy-blazer-havana-tailored-fit/C25216.html'},
@@ -424,6 +434,8 @@ const ITEMS = [
  {id:'s5', k:'schoen', n:'Bruine suède oxford',          m:'kalfssuède',          tex:'suede', hex:'#7a5539', p:229, f:2, s:'z', c:'bruin', u:'https://suitsupply.com/nl-nl/men/shoes/bruine-oxford/FW1028.html'},
  {id:'s6', k:'schoen', n:'Taupe suède instapper',        m:'kalfssuède',          tex:'suede', hex:'#a08a6e', p:229, f:2, s:'z', c:'beige', u:'https://suitsupply.com/nl-nl/men/shoes/taupe-instapper/FW1363.html'},
  {id:'s7', k:'schoen', n:'Taupe sneakers',                m:'business casual', tex:'leer', hex:'#a08a6e', p:0, f:2, s:'j', c:'beige', u:'https://suitsupply.com/nl-nl/men/shoes/sneakers'},
+ {id:'s8', k:'schoen', n:'Groenbruine sneakers',          m:'zakelijk',            tex:'leer',  hex:'#6b6a4c', p:0, f:2, s:'z', c:'bruin', u:''},
+ {id:'s9', k:'schoen', n:'Navy loafers, witte zool',      m:'zomers',              tex:'leer',  hex:'#2c3550', p:0, f:2, s:'z', c:'navy',  u:''},
 ];
 
 /* ============================================================
@@ -435,8 +447,12 @@ const RULES = {
     zwart: ['grijs','navy'],
     bruin: ['grijs','navy','bruin','beige','groen','wit'],
     beige: ['bruin','beige','grijs','groen','navy','wit'],
+    navy:  ['navy','grijs','beige','wit'],
   },
   // seizoen: 'w' winter, 'z' zomer, 'j' jaarrond
+  /* al iets in dezelfde categorie, kleurfamilie en formaliteit? dan geen aanrader */
+  sameSlot: (a,b) => a.k===b.k && a.c===b.c && a.f===b.f &&
+                     (a.s===b.s || a.s==='j' || b.s==='j'),
   inSeason: (item, season) => season==='alles' || item.s==='j' || item.s===season[0],
 };
 
@@ -463,6 +479,7 @@ let owned = new Set();
 let paid = {};      /* id -> betaalde prijs */
 let custom = [];    /* eigen stukken */
 let season = 'winter';
+let focusId = null;   /* stuk dat uitgelicht is; null = alles */
 let canPersist = true;
 
 const esc = s => String(s).replace(/[&<>"']/g, c =>
@@ -542,15 +559,22 @@ function countFits(set, seas){
   return n;
 }
 
+/* bij een uitgelicht stuk dat je nog niet hebt: reken alsof je het al had */
+function focusSet(){
+  if(!focusId || owned.has(focusId)) return owned;
+  const s = new Set(owned); s.add(focusId); return s;
+}
 function listFits(seas, cap){
   const out = [];
-  const ps = of('pantalon').filter(i=>owned.has(i.id) && RULES.inSeason(i,seas));
-  const ts = of('bovenstuk').filter(i=>owned.has(i.id) && RULES.inSeason(i,seas));
-  const ss = of('schoen').filter(i=>owned.has(i.id) && RULES.inSeason(i,seas));
+  const have = focusSet();
+  const ps = of('pantalon').filter(i=>have.has(i.id) && RULES.inSeason(i,seas));
+  const ts = of('bovenstuk').filter(i=>have.has(i.id) && RULES.inSeason(i,seas));
+  const ss = of('schoen').filter(i=>have.has(i.id) && RULES.inSeason(i,seas));
   for(const p of ps) for(const t of ts){
     if(!gapOk(p,t)) continue;
     for(const s of ss){
       if(!gapOk(p,s) || !gapOk(t,s) || !shoeOk(s,p)) continue;
+      if(focusId && p.id!==focusId && t.id!==focusId && s.id!==focusId) continue;
       let note = '';
       if(p.c===t.c && p.c!=='wit') note = 'toon op toon';
       if(Math.max(p.f,t.f,s.f)-Math.min(p.f,t.f,s.f)===0 && p.f>=3) note = note||'netste kant';
@@ -585,13 +609,21 @@ function renderLibrary(){
       b.type = 'button';
       b.dataset.owned = owned.has(it.id) ? '1' : '0';
       b.dataset.dim = RULES.inSeason(it,season) ? '0' : '1';
+      b.dataset.sel = focusId===it.id ? '1' : '0';
       b.setAttribute('aria-pressed', owned.has(it.id));
       b.innerHTML =
-        '<span class="sw" data-tex="'+it.tex+'" style="background-color:'+it.hex+'">'+
+        '<span class="sw" data-tex="'+it.tex+'" title="Klik voor alle combinaties met dit stuk" style="background-color:'+it.hex+'">'+
           '<span class="owned-tick">&#10003;</span></span>'+
         '<span><span class="nm">'+esc(it.n)+'</span>'+
           '<span class="meta">'+(it.m ? esc(it.m)+' &middot; ' : '')+seasonLabel(it.s)+'</span></span>';
-      b.onclick = () => { owned.has(it.id) ? owned.delete(it.id) : owned.add(it.id); render(); };
+      b.onclick = (ev) => {
+        if(ev.target.closest('.sw')){
+          focusId = (focusId===it.id) ? null : it.id;
+        } else {
+          owned.has(it.id) ? owned.delete(it.id) : owned.add(it.id);
+        }
+        render();
+      };
       line.appendChild(b);
 
 
@@ -627,7 +659,8 @@ function renderDerived(){
     const s2 = new Set(owned); s2.add(it.id);
     const gain = countFits(s2, season) - base;
     return {it, gain};
-  }).filter(r=>r.gain>0).sort((a,b)=> b.gain - a.gain).slice(0,6);
+  }).filter(r=>r.gain>0 && !allItems().some(o=>owned.has(o.id) && RULES.sameSlot(o,r.it)))
+    .sort((a,b)=> b.gain - a.gain).slice(0,6);
 
   const rk = document.getElementById('ranking');
   rk.innerHTML = '';
@@ -652,8 +685,15 @@ function renderDerived(){
   const fits = listFits(season, 14);
   const ob = document.getElementById('outfits');
   ob.innerHTML = '';
+  const foc = focusId ? byId(focusId) : null;
   if(!fits.length){
-    ob.innerHTML = '<div class="empty">Nog niets draagbaars in dit seizoen.</div>';
+    ob.innerHTML = '<div class="empty">'+(
+      foc && foc.k==='blazer'
+        ? 'Blazers tellen niet mee in de combinaties; ze zijn een optionele laag.'
+        : foc
+          ? 'Geen combinatie met '+esc(foc.n.toLowerCase())+' in dit seizoen.'
+          : 'Nog niets draagbaars in dit seizoen.'
+    )+'</div>';
   } else {
     for(const f of fits){
       const d = document.createElement('div');
@@ -669,8 +709,16 @@ function renderDerived(){
       ob.appendChild(d);
     }
   }
-  const total = countFits(owned, season);
-  document.getElementById('hintFits').textContent = fits.length < total ? ('eerste '+fits.length+' van '+total) : '';
+  const hf = document.getElementById('hintFits');
+  if(foc){
+    hf.innerHTML = 'alleen met '+esc(foc.n.toLowerCase())+
+      (owned.has(foc.id) ? '' : ' (nog niet in kast)')+
+      ' <button type="button" class="clearfocus" id="btnClearFocus">toon alles</button>';
+    document.getElementById('btnClearFocus').onclick = (ev) => { ev.stopPropagation(); focusId = null; render(); };
+  } else {
+    const total = countFits(owned, season);
+    hf.textContent = fits.length < total ? ('eerste '+fits.length+' van '+total) : '';
+  }
 
   // counters
   document.getElementById('cOwned').textContent = owned.size;
