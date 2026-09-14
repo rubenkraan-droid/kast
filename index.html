@@ -236,8 +236,8 @@ a{color:var(--brass)}
 .row[data-dim="1"]{opacity:.55}
 
 /* ---------- toevoegingen: betaalde prijs, per-keer, eigen stuk ---------- */
-.rowline{display:grid;grid-template-columns:1fr 78px;gap:8px;align-items:center}
-.rowline.has-del{grid-template-columns:1fr 78px 22px}
+.rowline{display:grid;grid-template-columns:1fr;gap:8px;align-items:center}
+.rowline.has-del{grid-template-columns:1fr 22px}
 .price{display:block;text-align:right;line-height:1.25}
 .price .eff{color:var(--brass)}
 .ppw{
@@ -290,7 +290,6 @@ a{color:var(--brass)}
   <div class="counter">
     <div class="stat"><span class="n" id="cOwned">0</span><span class="l">In kast</span></div>
     <div class="stat"><span class="n accent" id="cFits">0</span><span class="l">Combinaties</span></div>
-    <div class="stat"><span class="n" id="cSpend">0</span><span class="l">Nog te kopen</span></div>
   </div>
 </header>
 
@@ -336,7 +335,6 @@ a{color:var(--brass)}
     <option value="w">Winter</option>
     <option value="z">Zomer</option>
   </select></label>
-  <label>Betaald<input type="number" id="fPrice" min="0" step="1" value="0"></label>
   <div class="addact">
     <button type="submit" class="ghost primary">Toevoegen</button>
     <button type="button" class="ghost" id="btnAddCancel">Annuleren</button>
@@ -361,7 +359,7 @@ a{color:var(--brass)}
 <footer>
   <p>De regels achter dit ding zijn een inschatting, geen wet. Formaliteit loopt van 1 (jeans, T-shirt, sneaker) tot 4 (zwarte oxford); een combinatie telt mee als de stukken hooguit één stap uit elkaar liggen. Daarbovenop gelden kleurregels: zwarte schoenen alleen bij grijs en navy, bruine en taupe schoenen bij zo goed als alles, en flanel alleen in de winter.</p>
   <p id="persistNote" style="color:var(--brass-dim)"></p>
-  <p>Vul je bij een stuk een betaalde prijs in, dan rekent de ranking daarmee door in plaats van met de adviesprijs; laat je het veld leeg, dan blijft de adviesprijs gelden. De prijs per keer gaat uit van <strong>40 draagbeurten per jaar</strong>. Eigen stukken voeg je toe met de knop hierboven; ze staan alleen op dit apparaat.</p>
+  <p>Deze tool rekent niet met geld. Hij bewaart wat je hebt en laat zien wat daarmee te dragen valt; "beste volgende aankoop" sorteert op het aantal combinaties dat een stuk oplevert. Eigen stukken voeg je toe met de knop hierboven; ze staan alleen op dit apparaat.</p>
   <p>Wil je de logica aanpassen, dan zit alles in de arrays <code>ITEMS</code> en <code>RULES</code> onderaan het bestand. Voor GitHub: commit dit als <code>index.html</code> in een repo, zet Pages aan op de hoofdbranch en je hebt een werkende URL. Je kast wordt niet naar een server gestuurd, gebruik daarom de export- en importknop om hem tussen apparaten mee te nemen.</p>
 </footer>
 </div>
@@ -387,8 +385,8 @@ const ITEMS = [
  {id:'p11',k:'pantalon', n:'Lichtgroene pantalon',          m:'zomers, prijs invullen', tex:'katoen', hex:'#8d9c72', p:0,   f:2, s:'z', c:'groen', u:'https://suitsupply.com/nl-nl/men/trousers/green'},
  {id:'p12',k:'pantalon', n:'Denham spijkerbroek, slim fit',m:'nette denim, prijs invullen',tex:'katoen',hex:'#3f5675', p:0,   f:2, s:'j', c:'navy',  u:'https://www.denhamthejeanmaker.com/nl-nl/heren/jeans'},
  {id:'p13',k:'pantalon', n:'Witte pantalon',              m:'zomers, prijs invullen', tex:'katoen', hex:'#e9e5da', p:0,   f:3, s:'z', c:'wit',   u:''},
- {id:'p14',k:'pantalon', n:'Bruine geruite pantalon',    m:'Jacob Cohen, wol',       tex:'wol',    hex:'#6f5a45', p:0,   f:3, s:'w', c:'bruin', u:''},
- {id:'p15',k:'pantalon', n:'Navy wollen pantalon',       m:'Jacob Cohen, puur wol',  tex:'wol',    hex:'#2b3344', p:0,   f:3, s:'j', c:'navy',  u:''},
+ {id:'p14',k:'pantalon', n:'Bruine geruite flanellen pantalon', m:'Jacob Cohen, flanel', tex:'flanel', hex:'#6f5a45', p:0, f:3, s:'w', c:'bruin', u:''},
+ {id:'p15',k:'pantalon', n:'Navy flanellen pantalon',    m:'Jacob Cohen, flanel',    tex:'flanel', hex:'#2b3344', p:0,   f:3, s:'w', c:'navy',  u:''},
 
  // --- bovenstukken ---
  {id:'t1', k:'bovenstuk', n:'Wit overhemd, widespread',   m:'Pima katoen, 3 stuks',    tex:'katoen', hex:'#f2f1ed', p:99,  f:3, s:'j', c:'wit',   u:'https://suitsupply.com/nl-nl/men/shirts/wit-overhemd-met-widespread-kraag/H7000.html'},
@@ -588,49 +586,14 @@ function renderLibrary(){
       b.dataset.owned = owned.has(it.id) ? '1' : '0';
       b.dataset.dim = RULES.inSeason(it,season) ? '0' : '1';
       b.setAttribute('aria-pressed', owned.has(it.id));
-      const over = paid[it.id] != null;
       b.innerHTML =
         '<span class="sw" data-tex="'+it.tex+'" style="background-color:'+it.hex+'">'+
           '<span class="owned-tick">&#10003;</span></span>'+
         '<span><span class="nm">'+esc(it.n)+'</span>'+
-          '<span class="meta">'+esc(it.m)+' &middot; '+seasonLabel(it.s)+'</span></span>'+
-        '<span class="price">'+
-          '<span class="amt'+(over ? ' eff' : '')+'">'+fmtEur(priceOf(it))+'</span>'+
-          '<span class="ppw">'+fmtEur2(perWear(it))+' p/keer</span></span>';
+          '<span class="meta">'+esc(it.m)+' &middot; '+seasonLabel(it.s)+'</span></span>';
       b.onclick = () => { owned.has(it.id) ? owned.delete(it.id) : owned.add(it.id); render(); };
       line.appendChild(b);
 
-      /* betaalde prijs: leeg = reken met de adviesprijs */
-      const lab = document.createElement('label');
-      lab.className = 'paid';
-      const sr = document.createElement('span');
-      sr.className = 'sr';
-      sr.textContent = 'Betaalde prijs voor ' + it.n;
-      const inp = document.createElement('input');
-      inp.type = 'number';
-      inp.min = '0';
-      inp.step = '1';
-      inp.placeholder = String(it.p);
-      inp.value = over ? paid[it.id] : '';
-      inp.oninput = () => {
-        const raw = inp.value.trim();
-        if(raw === ''){
-          delete paid[it.id];
-        } else {
-          const n = Number(raw.replace(',', '.'));
-          if(!isFinite(n) || n < 0) return;
-          paid[it.id] = n;
-        }
-        savePaid();
-        const now = paid[it.id] != null;
-        b.querySelector('.amt').textContent = fmtEur(priceOf(it));
-        b.querySelector('.amt').className = 'amt' + (now ? ' eff' : '');
-        b.querySelector('.ppw').textContent = fmtEur2(perWear(it)) + ' p/keer';
-        renderDerived();
-      };
-      lab.appendChild(sr);
-      lab.appendChild(inp);
-      line.appendChild(lab);
 
       if(it.own){
         const del = document.createElement('button');
@@ -663,29 +626,27 @@ function renderDerived(){
   const rank = allItems().filter(i=>!owned.has(i.id)).map(it=>{
     const s2 = new Set(owned); s2.add(it.id);
     const gain = countFits(s2, season) - base;
-    const pr = priceOf(it);
-    return {it, gain, pr, per: pr > 0 ? gain / pr * 100 : gain * 1e4};
-  }).filter(r=>r.gain>0 && r.pr>0).sort((a,b)=> b.per - a.per || b.gain - a.gain).slice(0,6);
+    return {it, gain};
+  }).filter(r=>r.gain>0).sort((a,b)=> b.gain - a.gain).slice(0,6);
 
   const rk = document.getElementById('ranking');
   rk.innerHTML = '';
   if(!rank.length){
     rk.innerHTML = '<div class="empty">Nog geen enkel stuk levert een combinatie op. Vink minstens één pantalon, één bovenstuk en één paar schoenen aan, dan begint het te rekenen.</div>';
   } else {
-    const max = rank[0].per;
+    const max = rank[0].gain;
     for(const r of rank){
       const d = document.createElement('div');
       d.className = 'buy';
       d.innerHTML =
         '<div><div class="bn">'+esc(r.it.n)+'</div>'+
-        '<div class="bm">'+fmtEur(r.pr)+' &middot; '+fmtEur(r.pr/r.gain)+' per combinatie &middot; '+
-          fmtEur2(perWear(r.it))+' per keer</div></div>'+
+        '<div class="bm">'+esc(r.it.m)+' &middot; '+seasonLabel(r.it.s)+'</div></div>'+
         '<div class="bv">+'+r.gain+'<small>combinaties</small></div>'+
-        '<div class="bar"><i style="width:'+(r.per/max*100).toFixed(1)+'%"></i></div>';
+        '<div class="bar"><i style="width:'+(r.gain/max*100).toFixed(1)+'%"></i></div>';
       rk.appendChild(d);
     }
   }
-  document.getElementById('hintBuy').textContent = rank.length ? 'gesorteerd op rendement' : '';
+  document.getElementById('hintBuy').textContent = rank.length ? 'meeste combinaties eerst' : '';
 
   // outfits
   const fits = listFits(season, 14);
@@ -714,8 +675,6 @@ function renderDerived(){
   // counters
   document.getElementById('cOwned').textContent = owned.size;
   document.getElementById('cFits').textContent = base;
-  const spend = allItems().filter(i=>!owned.has(i.id) && RULES.inSeason(i,season)).reduce((a,b)=>a+priceOf(b),0);
-  document.getElementById('cSpend').textContent = '\u20ac'+spend.toLocaleString('nl-NL');
 }
 
 function seasonLabel(s){ return s==='j' ? 'jaarrond' : s==='w' ? 'winter' : 'zomer'; }
@@ -751,7 +710,7 @@ addForm.onsubmit = e => {
   const name = document.getElementById('fName').value.trim();
   if(!name) return;
   const colour = document.getElementById('fColour').value;
-  const price = Math.max(0, Number(document.getElementById('fPrice').value) || 0);
+  const price = 0;
   const it = {
     id:  nextCustomId(),
     k:   document.getElementById('fKind').value,
