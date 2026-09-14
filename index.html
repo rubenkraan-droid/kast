@@ -133,6 +133,12 @@ h3:first-of-type{margin-top:0}
 .row[data-owned="1"]{border-color:var(--brass-dim);background:var(--panel)}
 .row[data-dim="1"]{opacity:.26}
 .row[data-sel="1"]{border-color:var(--brass);background:var(--panel-2)}
+.split{
+  font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin:12px 0 6px;padding-left:8px;
+  display:flex;align-items:center;gap:9px;
+}
+.split::after{content:"";flex:1;height:1px;background:var(--line)}
 .sw{cursor:pointer}
 .clearfocus{
   background:transparent;border:1px solid var(--brass-dim);border-radius:2px;
@@ -609,10 +615,22 @@ function renderLibrary(){
   const lib = document.getElementById('library');
   lib.innerHTML = '';
   for(const {k,label} of KINDS){
+    const alle = of(k);
+    const heb = alle.filter(i=>owned.has(i.id));
+    const rest = alle.filter(i=>!owned.has(i.id));
+
     const h = document.createElement('h3');
-    h.textContent = label;
+    h.textContent = label + '  ' + heb.length + '/' + alle.length;
     lib.appendChild(h);
-    for(const it of of(k)){
+
+    /* eerst wat je hebt, in de volgorde van de lijst; daarna de rest */
+    for(const it of heb.concat(rest)){
+      if(rest.length && heb.length && it === rest[0]){
+        const sp = document.createElement('div');
+        sp.className = 'split';
+        sp.textContent = 'nog niet in kast';
+        lib.appendChild(sp);
+      }
       const line = document.createElement('div');
       line.className = 'rowline' + (it.own ? ' has-del' : '');
 
