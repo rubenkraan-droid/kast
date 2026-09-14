@@ -570,16 +570,24 @@ function listFits(seas, cap){
   const ps = of('pantalon').filter(i=>have.has(i.id) && RULES.inSeason(i,seas));
   const ts = of('bovenstuk').filter(i=>have.has(i.id) && RULES.inSeason(i,seas));
   const ss = of('schoen').filter(i=>have.has(i.id) && RULES.inSeason(i,seas));
-  for(const p of ps) for(const t of ts){
-    if(!gapOk(p,t)) continue;
-    for(const s of ss){
-      if(!gapOk(p,s) || !gapOk(t,s) || !shoeOk(s,p)) continue;
-      if(focusId && p.id!==focusId && t.id!==focusId && s.id!==focusId) continue;
-      let note = '';
-      if(p.c===t.c && p.c!=='wit') note = 'toon op toon';
-      if(Math.max(p.f,t.f,s.f)-Math.min(p.f,t.f,s.f)===0 && p.f>=3) note = note||'netste kant';
-      out.push({p,t,s,note});
-      if(out.length>=cap) return out;
+  /* zonder uitgelicht stuk: hooguit één outfit per bovenstuk, anders staat de
+     lijst vol met hetzelfde overhemd en steeds een andere schoen */
+  const eenPerBovenstuk = !focusId;
+  for(const t of ts){
+    let gehad = false;
+    for(const p of ps){
+      if(gehad) break;
+      if(!gapOk(p,t)) continue;
+      for(const s of ss){
+        if(!gapOk(p,s) || !gapOk(t,s) || !shoeOk(s,p)) continue;
+        if(focusId && p.id!==focusId && t.id!==focusId && s.id!==focusId) continue;
+        let note = '';
+        if(p.c===t.c && p.c!=='wit') note = 'toon op toon';
+        if(Math.max(p.f,t.f,s.f)-Math.min(p.f,t.f,s.f)===0 && p.f>=3) note = note||'netste kant';
+        out.push({p,t,s,note});
+        if(out.length>=cap) return out;
+        if(eenPerBovenstuk){ gehad = true; break; }
+      }
     }
   }
   return out;
@@ -717,7 +725,9 @@ function renderDerived(){
     document.getElementById('btnClearFocus').onclick = (ev) => { ev.stopPropagation(); focusId = null; render(); };
   } else {
     const total = countFits(owned, season);
-    hf.textContent = fits.length < total ? ('eerste '+fits.length+' van '+total) : '';
+    hf.textContent = total > fits.length
+      ? ('\u00e9\u00e9n per bovenstuk \u00b7 ' + total + ' mogelijk')
+      : '';
   }
 
   // counters
