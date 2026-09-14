@@ -72,6 +72,7 @@ stuk:
 | `f` | formaliteit 1–4 — 1 is jeans en sneakers, 4 is een zwarte oxford |
 | `s` | seizoen: `w` winter, `z` zomer, `j` jaarrond |
 | `c` | kleurfamilie: `grijs`, `navy`, `bruin`, `beige`, `wit`, `zwart`, `groen` |
+| `pat` | dessin: `ruit` of `streep`. Weglaten betekent effen. Glans telt niet als dessin |
 | `u` | link naar het product, mag leeg |
 
 Een stuk toevoegen is een regel erbij met een nieuw `id`. Blazers doen niet mee in
@@ -101,6 +102,8 @@ const RULES = {
   bevat **pantalonkleuren**. Voeg je een nieuwe kleurfamilie toe aan `ITEMS`, dan
   moet je hem hier ook in de betreffende lijsten zetten — anders combineert dat
   stuk met geen enkele schoen.
+- `maxPatronen` — hoeveel gepatroneerde stukken er samen in een outfit mogen.
+  Op `1` sluit hij ruit bij streep uit, en ook ruit bij ruit.
 - `inSeason` — `alles` laat alles door; verder telt een stuk mee als het jaarrond
   is (`j`) of als de eerste letter van het seizoen klopt (`winter` → `w`).
 
