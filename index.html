@@ -381,8 +381,8 @@ const ITEMS = [
  // --- pantalons ---
  {id:'p1', k:'pantalon', n:'Grijze flanellen pantalon',      m:'VBC S120 flanel', tex:'flanel', hex:'#6e7074', p:169, f:3, s:'w', c:'grijs', u:'https://suitsupply.com/nl-nl/men/trousers/grijze-straight-leg-pantalon/B6906.html'},
  {id:'p2', k:'pantalon', n:'Donkergrijze flanellen pantalon',m:'VBC S120 flanel', tex:'flanel', hex:'#494c51', p:169, f:3, s:'w', c:'grijs', u:'https://suitsupply.com/nl-nl/men/trousers/donkergrijze-straight-leg-pantalon/B6905.html'},
- {id:'p3', k:'pantalon', n:'Navy flanellen pantalon',        m:'VBC S120 flanel', tex:'flanel', hex:'#2b3242', p:169, f:3, s:'w', c:'navy',  u:'https://suitsupply.com/nl-nl/men/trousers/navy-straight-leg-pantalon/B6904.html'},
- {id:'p4', k:'pantalon', n:'Donkerbruine flanellen pantalon',m:'VBC S120 flanel', tex:'flanel', hex:'#4a3a2e', p:169, f:3, s:'w', c:'bruin', u:'https://suitsupply.com/nl-nl/men/trousers/donkerbruine-straight-leg-pantalon/B7107.html'},
+ {id:'p3', k:'pantalon', n:'Navy flanellen pantalon',        m:'Jacob Cohen, flanel', tex:'flanel', hex:'#2b3242', p:0, f:3, s:'w', c:'navy',  u:''},
+ {id:'p4', k:'pantalon', n:'Bruine geruite flanellen pantalon', m:'Jacob Cohen, flanel', tex:'flanel', hex:'#6f5a45', p:0, f:3, s:'w', c:'bruin', u:''},
  {id:'p5', k:'pantalon', n:'Navy pantalon 4-ply',            m:'Rogna, kreukvrij',tex:'wol',    hex:'#2c3547', p:179, f:3, s:'j', c:'navy',  u:'https://suitsupply.com/nl-nl/men/trousers/navy-straight-leg-pantalon/B6862.html'},
  {id:'p6', k:'pantalon', n:'Donkerbruine pantalon 4-ply',    m:'Rogna, kreukvrij',tex:'wol',    hex:'#4e3c2f', p:179, f:3, s:'j', c:'bruin', u:'https://suitsupply.com/nl-nl/men/trousers/donkerbruine-straight-leg-pantalon/SST10006B01.html'},
  {id:'p7', k:'pantalon', n:'Beige pantalon 4-ply',           m:'Rogna, kreukvrij',tex:'wol',    hex:'#b9a88c', p:179, f:3, s:'z', c:'beige', u:'https://suitsupply.com/nl-nl/men/trousers/beige-wide-leg-tapered-pantalon/B7134.html'},
@@ -392,8 +392,6 @@ const ITEMS = [
  {id:'p11',k:'pantalon', n:'Lichtgroene pantalon',          m:'zomers', tex:'katoen', hex:'#8d9c72', p:0,   f:2, s:'z', c:'groen', u:'https://suitsupply.com/nl-nl/men/trousers/green'},
  {id:'p12',k:'pantalon', n:'Denham spijkerbroek, slim fit',m:'nette denim',tex:'katoen',hex:'#3f5675', p:0,   f:2, s:'j', c:'navy',  u:'https://www.denhamthejeanmaker.com/nl-nl/heren/jeans'},
  {id:'p13',k:'pantalon', n:'Witte pantalon',              m:'zomers', tex:'katoen', hex:'#e9e5da', p:0,   f:3, s:'z', c:'wit',   u:''},
- {id:'p14',k:'pantalon', n:'Bruine geruite flanellen pantalon', m:'Jacob Cohen, flanel', tex:'flanel', hex:'#6f5a45', p:0, f:3, s:'w', c:'bruin', u:''},
- {id:'p15',k:'pantalon', n:'Navy flanellen pantalon',    m:'Jacob Cohen, flanel',    tex:'flanel', hex:'#2b3344', p:0,   f:3, s:'w', c:'navy',  u:''},
 
  // --- bovenstukken ---
  {id:'t1', k:'bovenstuk', n:'Wit overhemd, widespread',   m:'Pima katoen, 3 stuks',    tex:'katoen', hex:'#f2f1ed', p:99,  f:3, s:'j', c:'wit',   u:'https://suitsupply.com/nl-nl/men/shirts/wit-overhemd-met-widespread-kraag/H7000.html'},
@@ -827,9 +825,14 @@ document.getElementById('btnImport').onclick = () => {
   inp.click();
 };
 
+/* p14 en p15 bleken dezelfde broek als p4 en p3; oude vinkjes meeverhuizen */
+const SAMENGEVOEGD = {p14:'p4', p15:'p3'};
 const restored = loadOwned();
 if(restored){
   owned = restored;
+  for(const [oud, nieuw] of Object.entries(SAMENGEVOEGD)){
+    if(owned.has(oud)){ owned.delete(oud); owned.add(nieuw); }
+  }
 } else {
   owned.add('t1'); owned.add('t2');
 }
